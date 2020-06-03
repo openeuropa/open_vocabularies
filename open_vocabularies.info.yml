@@ -1,0 +1,6 @@
+name: Open Vocabularies
+description: Choose how a piece of content will be categorised without having to change the related content type field definition.
+package: OpenEuropa
+
+type: module
+core: 8.x
