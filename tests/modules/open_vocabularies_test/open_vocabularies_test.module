@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains hooks for the open_vocabularies_test module.
+ */
+
+declare(strict_types = 1);
+
+/**
+ * Implements hook_vocabulary_reference_handler_info_alter().
+ */
+function open_vocabularies_test_vocabulary_reference_handler_info_alter(array &$info) {
+  $info['test_alter_hook']['definition_altered'] = TRUE;
+}
