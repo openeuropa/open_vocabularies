@@ -33,14 +33,14 @@ class VocabularyReferenceHandlerPluginManagerTest extends KernelTestBase {
       'test_entity_plugin' => [
         'label' => new TranslatableMarkup('Test entities'),
         'id' => 'test_entity_plugin',
-        'entity_type' => 'entity_test',
+        'target_type' => 'entity_test',
         'class' => VocabularyReferenceHandlerDefault::class,
         'provider' => 'open_vocabularies_test',
       ],
       'test_alter_hook' => [
         'label' => new TranslatableMarkup('Tests the info alter hook'),
         'id' => 'test_alter_hook',
-        'entity_type' => 'entity_test_label',
+        'target_type' => 'entity_test_label',
         'class' => VocabularyReferenceHandlerDefault::class,
         'provider' => 'open_vocabularies_test',
         'definition_altered' => TRUE,

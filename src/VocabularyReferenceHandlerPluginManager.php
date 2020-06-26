@@ -35,7 +35,7 @@ class VocabularyReferenceHandlerPluginManager extends DefaultPluginManager imple
     // The plugin label.
     'label' => '',
     // The entity type this handler can reference.
-    'entity_type' => '',
+    'target_type' => '',
     // Default plugin class.
     'class' => 'Drupal\open_vocabularies\VocabularyReferenceHandlerDefault',
   ];
