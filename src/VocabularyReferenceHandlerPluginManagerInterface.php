@@ -4,10 +4,12 @@ declare(strict_types = 1);
 
 namespace Drupal\open_vocabularies;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
+
 /**
  * Interface for vocabulary reference handler plugin managers.
  */
-interface VocabularyReferenceHandlerPluginManagerInterface {
+interface VocabularyReferenceHandlerPluginManagerInterface extends PluginManagerInterface {
 
   /**
    * Returns an array of plugins to be used as #options in forms.
