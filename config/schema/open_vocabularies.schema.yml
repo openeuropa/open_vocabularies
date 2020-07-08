@@ -1,0 +1,21 @@
+open_vocabularies.open_vocabulary.*:
+  type: config_entity
+  label: Vocabulary
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+    description:
+      type: string
+      label: Description
+    handler:
+      type: string
+      label: 'Vocabulary reference plugin ID'
+    handler_settings:
+      type: vocabulary_reference_handler_settings.[%parent.handler]
+      label: 'Vocabulary reference handler settings'
