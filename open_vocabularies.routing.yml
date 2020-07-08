@@ -1,0 +1,31 @@
+entity.open_vocabulary.collection:
+  path: '/admin/structure/open-vocabulary'
+  defaults:
+    _entity_list: 'open_vocabulary'
+    _title: 'Vocabulary configuration'
+  requirements:
+    _permission: 'administer open vocabularies'
+
+entity.open_vocabulary.add_form:
+  path: '/admin/structure/open_vocabulary/add'
+  defaults:
+    _entity_form: 'open_vocabulary.add'
+    _title: 'Add a vocabulary'
+  requirements:
+    _permission: 'administer open vocabularies'
+
+entity.open_vocabulary.edit_form:
+  path: '/admin/structure/open-vocabulary/{open_vocabulary}'
+  defaults:
+    _entity_form: 'open_vocabulary.edit'
+    _title: 'Edit a vocabulary'
+  requirements:
+    _permission: 'administer open vocabularies'
+
+entity.open_vocabulary.delete_form:
+  path: '/admin/structure/open-vocabulary/{open_vocabulary}/delete'
+  defaults:
+    _entity_form: 'open_vocabulary.delete'
+    _title: 'Delete a vocabulary'
+  requirements:
+    _permission: 'administer open vocabularies'

@@ -1,0 +1,5 @@
+entity.open_vocabulary.add_form:
+  route_name: 'entity.open_vocabulary.add_form'
+  title: 'Add vocabulary'
+  appears_on:
+    - entity.open_vocabulary.collection
