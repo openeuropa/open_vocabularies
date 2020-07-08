@@ -70,8 +70,9 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
     ];
 
     $form['description'] = [
-      '#type' => 'textarea',
+      '#type' => 'textfield',
       '#title' => $this->t('Description'),
+      '#maxlength' => 255,
       '#default_value' => $this->entity->getDescription(),
       '#description' => $this->t('Description of the vocabulary.'),
     ];
