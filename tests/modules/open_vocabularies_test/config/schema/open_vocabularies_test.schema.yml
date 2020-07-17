@@ -3,3 +3,6 @@ vocabulary_reference_handler_settings.test_entity_plugin:
 
 vocabulary_reference_handler_settings.test_alter_hook:
   type: entity_reference_selection.default
+
+vocabulary_reference_handler_settings.entity_test_with_bundle:
+  type: entity_reference_selection.default
