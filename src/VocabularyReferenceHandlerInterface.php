@@ -22,12 +22,9 @@ interface VocabularyReferenceHandlerInterface {
   /**
    * Returns the ID of the associated entity reference selection handler.
    *
-   * @param array $configuration
-   *   An array of plugin configuration.
-   *
    * @return \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
    *   The entity reference selection handler instance
    */
-  public function getHandler(array $configuration = []): SelectionInterface;
+  public function getHandler(): SelectionInterface;
 
 }

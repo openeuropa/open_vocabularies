@@ -99,8 +99,8 @@ class VocabularyReferenceHandlerDefaultTest extends UnitTestCase {
       ->with($expected_configuration)
       ->willReturn($mocked_selection_handler);
 
-    $plugin = $this->getPluginInstance($definition);
-    $this->assertSame($mocked_selection_handler, $plugin->getHandler($configuration));
+    $plugin = $this->getPluginInstance($definition, $configuration);
+    $this->assertSame($mocked_selection_handler, $plugin->getHandler());
   }
 
   /**
@@ -108,15 +108,15 @@ class VocabularyReferenceHandlerDefaultTest extends UnitTestCase {
    *
    * @param array $definition
    *   The plugin definition.
-   * @param string $plugin_id
-   *   The plugin ID.
    * @param array $configuration
    *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
    *
    * @return \Drupal\open_vocabularies\VocabularyReferenceHandlerDefault
    *   A new plugin instance.
    */
-  protected function getPluginInstance(array $definition = [], string $plugin_id = 'test_handler_plugin', array $configuration = []): VocabularyReferenceHandlerDefault {
+  protected function getPluginInstance(array $definition = [], array $configuration = [], string $plugin_id = 'test_handler_plugin'): VocabularyReferenceHandlerDefault {
     $definition += ['id' => $plugin_id];
     $plugin = new VocabularyReferenceHandlerDefault($configuration, $plugin_id, $definition, $this->selectionManager);
     $plugin->setStringTranslation($this->stringTranslation);

@@ -63,10 +63,10 @@ class VocabularyReferenceHandlerDefault extends PluginBase implements Vocabulary
   /**
    * {@inheritdoc}
    */
-  public function getHandler(array $configuration = []): SelectionInterface {
-    $configuration['target_type'] = $this->pluginDefinition['target_type'];
+  public function getHandler(): SelectionInterface {
+    $this->configuration['target_type'] = $this->pluginDefinition['target_type'];
 
-    return $this->selectionManager->getInstance($configuration);
+    return $this->selectionManager->getInstance($this->configuration);
   }
 
 }
