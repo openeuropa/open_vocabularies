@@ -114,8 +114,11 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
       $form['handler_settings'] += $entity_reference_selection->buildConfigurationForm([], $form_state);
 
       // @todo Handle this in a wrapper plugin maybe?
-      $form['handler_settings']['auto_create']['#access'] = FALSE;
-      $form['handler_settings']['auto_create']['#value'] = FALSE;
+      foreach (['auto_create', 'auto_create_bundle'] as $key) {
+        if (isset($form['handler_settings'][$key])) {
+          $form['handler_settings'][$key]['#access'] = FALSE;
+        }
+      }
     }
 
     return $form;
@@ -128,6 +131,11 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
     // The selection handlers expect the form elements to be under a specific
     // array key. Move the handler settings up to match our entity property.
     $handler_settings = $form_state->getValue(['settings', 'handler_settings'], []);
+
+    // Force auto create settings to disabled.
+    $handler_settings['auto_create'] = FALSE;
+    $handler_settings['auto_create_bundle'] = NULL;
+
     $form_state->setValue('handler_settings', $handler_settings);
 
     return parent::buildEntity($form, $form_state);
