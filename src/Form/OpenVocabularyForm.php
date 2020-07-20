@@ -109,8 +109,8 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
 
     if ($handler_id) {
       /** @var \Drupal\open_vocabularies\VocabularyReferenceHandlerInterface $vocabulary_handler */
-      $vocabulary_handler = $this->referenceHandlerManager->createInstance($handler_id);
-      $entity_reference_selection = $vocabulary_handler->getHandler($this->entity->getHandlerSettings());
+      $vocabulary_handler = $this->referenceHandlerManager->createInstance($handler_id, $this->entity->getHandlerSettings());
+      $entity_reference_selection = $vocabulary_handler->getHandler();
       $form['handler_settings'] += $entity_reference_selection->buildConfigurationForm([], $form_state);
 
       // @todo Handle this in a wrapper plugin maybe?
