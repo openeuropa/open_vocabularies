@@ -1,0 +1,6 @@
+test_entity_plugin:
+  label: 'Test entities'
+  target_type: entity_test
+test_alter_hook:
+  label: 'Tests the info alter hook'
+  target_type: entity_test_label

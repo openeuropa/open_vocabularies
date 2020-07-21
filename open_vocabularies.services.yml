@@ -1,0 +1,4 @@
+services:
+  plugin.manager.open_vocabularies.vocabulary_reference_handler:
+    class: Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManager
+    arguments: ['@module_handler', '@cache.discovery']
