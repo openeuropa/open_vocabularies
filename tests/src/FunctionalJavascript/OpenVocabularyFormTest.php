@@ -98,7 +98,9 @@ class OpenVocabularyFormTest extends WebDriverTestBase {
 
     // Verify that the entity reference plugin ajax and states functionalities
     // work correctly.
-    $this->assertFalse($assert_session->fieldExists('Sort by')->isVisible());
+    $sorty_by = $assert_session->fieldExists('Sort by');
+    // @todo Restore this line when Drupal 8.8 compatibility is dropped.
+    // $this->assertFalse($sorty_by->isVisible());
     $this->getSession()->getPage()->findField('Alpha')->check();
     $assert_session->assertWaitOnAjaxRequest();
     $sort_by = $assert_session->fieldExists('Sort by');
