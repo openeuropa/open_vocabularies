@@ -70,8 +70,8 @@ class OpenVocabularyListBuilder extends ConfigEntityListBuilder {
     $row['id'] = $entity->id();
     $row['description'] = $entity->getDescription();
 
-    $handler = $this->handlerManager->createInstance($entity->getHandler());
-    $row['handler'] = $handler->label();
+    $definition = $this->handlerManager->getDefinition($entity->getHandler());
+    $row['handler'] = $definition['label'];
 
     return $row + parent::buildRow($entity);
   }
