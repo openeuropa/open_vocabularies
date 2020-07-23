@@ -8,8 +8,6 @@ open_vocabularies.open_vocabulary.*:
     label:
       type: label
       label: Label
-    uuid:
-      type: string
     description:
       type: string
       label: Description
