@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,10 +30,13 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
   /**
    * Instantiates a new instance of the form.
    *
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
    *   The reference handler plugin manager.
    */
-  public function __construct(VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager) {
+  public function __construct(MessengerInterface $messenger, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager) {
+    $this->messenger = $messenger;
     $this->referenceHandlerManager = $referenceHandlerManager;
   }
 
@@ -41,6 +45,7 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('messenger'),
       $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler')
     );
   }
@@ -151,7 +156,7 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
     $message = $result == SAVED_NEW
       ? $this->t('Created new vocabulary %label.', $message_args)
       : $this->t('Updated vocabulary %label.', $message_args);
-    $this->messenger()->addStatus($message);
+    $this->messenger->addStatus($message);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
 
     return $result;
