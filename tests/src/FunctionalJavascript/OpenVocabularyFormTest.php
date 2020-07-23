@@ -116,8 +116,8 @@ class OpenVocabularyFormTest extends WebDriverTestBase {
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Status message Created new vocabulary Vocabulary 1.');
 
-    // Load the vocabulary config entity and verify that the auto create values
-    // are disabled.
+    // Load the vocabulary config entity and assert that all values have been
+    // saved correctly.
     /** @var \Drupal\open_vocabularies\OpenVocabularyInterface $vocabulary */
     $vocabulary = \Drupal::entityTypeManager()->getStorage('open_vocabulary')->load('vocabulary_1');
     $this->assertEquals([

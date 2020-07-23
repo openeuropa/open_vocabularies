@@ -7,7 +7,7 @@ namespace Drupal\open_vocabularies;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Provides an interface defining a vocabulary entity type.
+ * Provides an interface defining a vocabulary entity.
  */
 interface OpenVocabularyInterface extends ConfigEntityInterface {
 

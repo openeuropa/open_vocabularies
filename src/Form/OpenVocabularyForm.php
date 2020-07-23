@@ -178,7 +178,7 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
   }
 
   /**
-   * Form element validation handler. Invokes selection plugin's validation.
+   * Form element validation handler. Invokes the selection plugin's validation.
    *
    * @param array $form
    *   The form where the settings form is being included in.
