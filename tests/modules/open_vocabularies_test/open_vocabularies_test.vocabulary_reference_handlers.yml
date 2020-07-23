@@ -4,3 +4,6 @@ test_entity_plugin:
 test_alter_hook:
   label: 'Tests the info alter hook'
   target_type: entity_test_label
+entity_test_with_bundle:
+  label: 'Entity test with bundle'
+  target_type: entity_test_with_bundle
