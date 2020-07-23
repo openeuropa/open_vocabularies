@@ -186,13 +186,13 @@ class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterfa
    *   The form state of the (entire) configuration form.
    */
   public function validateSelectionPluginHandlerConfiguration(array $form, FormStateInterface $form_state): void {
-    $handler = $form_state->getValue('handler', NULL);
-    if ($handler === NULL) {
+    $handler_id = $form_state->getValue('handler', NULL);
+    if ($handler_id === NULL) {
       return;
     }
 
-    $plugin = $this->referenceHandlerManager->createInstance($handler);
-    $plugin->getHandler()->validateConfigurationForm($form, $form_state);
+    $vocabulary_handler = $this->referenceHandlerManager->createInstance($handler_id);
+    $vocabulary_handler->getHandler()->validateConfigurationForm($form, $form_state);
   }
 
 }

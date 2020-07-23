@@ -38,15 +38,15 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     ]);
     $vocabulary->save();
 
-    $routes = [
+    $urls = [
       $vocabulary->toUrl('collection'),
       $vocabulary->toUrl('add-form'),
       $vocabulary->toUrl('edit-form'),
       $vocabulary->toUrl('delete-form'),
     ];
 
-    foreach ($routes as $route) {
-      $this->drupalGet($route);
+    foreach ($urls as $url) {
+      $this->drupalGet($url);
       $this->assertSession()->statusCodeEquals(403);
     }
 
@@ -54,8 +54,8 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer open vocabularies',
     ]));
-    foreach ($routes as $route) {
-      $this->drupalGet($route);
+    foreach ($urls as $url) {
+      $this->drupalGet($url);
       $this->assertSession()->statusCodeEquals(200);
     }
   }
