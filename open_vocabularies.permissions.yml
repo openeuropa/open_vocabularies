@@ -1,2 +1,5 @@
 administer open vocabularies:
   title: 'Administer vocabulary'
+
+administer open vocabulary associations:
+  title: 'Administer vocabulary associations'

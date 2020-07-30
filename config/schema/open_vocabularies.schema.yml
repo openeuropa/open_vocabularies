@@ -17,3 +17,41 @@ open_vocabularies.open_vocabulary.*:
     handler_settings:
       type: vocabulary_reference_handler_settings.[%parent.handler]
       label: 'Vocabulary reference handler settings'
+
+open_vocabularies.open_vocabulary_association.*:
+  type: config_entity
+  label: Vocabulary Association
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    name:
+      type: string
+      label: The machine name
+    fields:
+      type: sequence
+      label: Fields
+      sequence:
+        type: string
+        label: Field name
+    widget_type:
+      type: string
+      label: The widget type
+    vocabulary:
+      type: string
+      label: The vocabulary name
+    cardinality:
+      type: integer
+      label: The cardinality
+    required:
+      type: boolean
+      label: Whether the field is required
+    predicate:
+      type: string
+      label: The predicate
+    help_text:
+      type: text
+      label: The help text
