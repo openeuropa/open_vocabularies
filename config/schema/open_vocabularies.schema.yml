@@ -55,3 +55,6 @@ open_vocabularies.open_vocabulary_association.*:
     help_text:
       type: text
       label: The help text
+    weight:
+      type: integer
+      label: 'Weight'

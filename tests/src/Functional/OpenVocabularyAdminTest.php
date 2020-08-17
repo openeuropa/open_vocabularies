@@ -157,13 +157,14 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
 
     $table = $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
     $headers = $table->findAll('xpath', '/thead/tr/th');
-    $this->assertCount(5, $headers);
+    $this->assertCount(6, $headers);
 
     $expected_headers = [
       'Label',
       'Machine name',
       'Widget type',
       'Vocabulary',
+      'Weight',
       'Operations',
     ];
     foreach ($headers as $key => $header) {
@@ -173,29 +174,54 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     // Create a vocabulary.
     $vocabulary = $this->createTestVocabulary();
 
-    // Create a vocabulary association.
+    // Create 2 vocabulary associations.
+    $associations = [];
     $values = [
-      'label' => $this->randomString(),
+      'label' => 'Association 0',
       'vocabulary' => $vocabulary->id(),
-      'name' => strtolower($this->randomMachineName()),
+      'name' => 'association_0',
       'widget_type' => 'test_alter_hook',
     ];
     $association = OpenVocabularyAssociation::create($values);
     $association->save();
+    $associations[] = $association;
+
+    $values['label'] = 'Association 1';
+    $values['name'] = 'association_1';
+    $association = OpenVocabularyAssociation::create($values);
+    $association->save();
+    $associations[] = $association;
 
     $this->drupalGet('/admin/structure/open-vocabulary-association');
     $this->assertSession()->pageTextNotContains('There are no vocabulary associations yet.');
     $rows = $this->getSession()->getPage()->findAll('xpath', '//div[@class="layout-content"]//table/tbody/tr');
-    $this->assertCount(1, $rows);
+    $this->assertCount(2, $rows);
 
     // Verify that the cells contain the correct data.
-    $cells = $rows[0]->findAll('xpath', '/td');
-    $this->assertEquals($values['label'], $cells[0]->getText());
-    $this->assertEquals($values['name'], $cells[1]->getText());
-    $this->assertEquals('Tests the info alter hook', $cells[2]->getText());
-    $this->assertEquals($vocabulary->label(), $cells[3]->getText());
-    $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $association->toUrl('edit-form')->toString() . '")]', $cells[4]);
-    $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $association->toUrl('delete-form')->toString() . '")]', $cells[4]);
+    foreach (['Association 0', 'Association 1'] as $row => $label) {
+      $cells = $rows[$row]->findAll('xpath', '/td');
+      $this->assertEquals($label, $cells[0]->getText());
+      $this->assertEquals('association_' . $row, $cells[1]->getText());
+      $this->assertEquals('Tests the info alter hook', $cells[2]->getText());
+      $this->assertEquals($vocabulary->label(), $cells[3]->getText());
+      // Assert the weight value which in the beginning is the same as the row
+      // number.
+      $this->assertEquals($row, $this->getSession()->getPage()->findField('entities[' . $associations[$row]->id() . '][weight]')->getValue());
+      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('edit-form')->toString() . '")]', $cells[5]);
+      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('delete-form')->toString() . '")]', $cells[5]);
+    }
+
+    // Re-order the associations and assert the order has changed.
+    $this->getSession()->getPage()->fillField('entities[' . $associations[0]->id() . '][weight]', 10);
+    $this->getSession()->getPage()->fillField('entities[' . $associations[1]->id() . '][weight]', 5);
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->pageTextContains('The order of the vocabulary associations has been updated.');
+    $this->assertEquals(10, $this->getSession()->getPage()->findField('entities[' . $associations[0]->id() . '][weight]')->getValue());
+    $this->assertEquals(5, $this->getSession()->getPage()->findField('entities[' . $associations[1]->id() . '][weight]')->getValue());
+    foreach (['Association 1', 'Association 0'] as $row => $label) {
+      $cells = $rows[$row]->findAll('xpath', '/td');
+      $this->assertEquals($label, $cells[0]->getText());
+    }
   }
 
   /**

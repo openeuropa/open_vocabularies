@@ -27,7 +27,8 @@ use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
  *       "add" = "Drupal\open_vocabularies\Form\OpenVocabularyAssociationForm",
  *       "edit" = "Drupal\open_vocabularies\Form\OpenVocabularyAssociationForm",
  *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
- *     }
+ *     },
+ *     "storage" = "Drupal\open_vocabularies\OpenVocabularyAssociationStorage"
  *   },
  *   config_prefix = "open_vocabulary_association",
  *   admin_permission = "administer open vocabulary associations",
@@ -40,7 +41,8 @@ use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "weight" = "weight"
  *   },
  *   config_export = {
  *     "id",
@@ -52,7 +54,8 @@ use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
  *     "cardinality",
  *     "required",
  *     "predicate",
- *     "help_text"
+ *     "help_text",
+ *     "weight"
  *   }
  * )
  */
@@ -129,6 +132,13 @@ class OpenVocabularyAssociation extends ConfigEntityBase implements OpenVocabula
   protected $help_text;
 
   /**
+   * The vocabulary association weight.
+   *
+   * @var int
+   */
+  protected $weight;
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -189,6 +199,13 @@ class OpenVocabularyAssociation extends ConfigEntityBase implements OpenVocabula
    */
   public function getHelpText(): ?string {
     return $this->help_text;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight(): int {
+    return $this->weight;
   }
 
   /**
