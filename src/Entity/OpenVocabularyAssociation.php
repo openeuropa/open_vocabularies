@@ -140,6 +140,8 @@ class OpenVocabularyAssociation extends ConfigEntityBase implements OpenVocabula
 
   /**
    * {@inheritdoc}
+   *
+   * @SuppressWarnings(PHPMD.ShortMethodName)
    */
   public function id() {
     return $this->getVocabulary() . '.' . $this->getName();
