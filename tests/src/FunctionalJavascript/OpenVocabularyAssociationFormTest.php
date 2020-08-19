@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\open_vocabularies\src\FunctionalJavascript;
+namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 

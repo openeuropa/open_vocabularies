@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\open_vocabularies\src\Functional;
+namespace Drupal\Tests\open_vocabularies\Functional;
 
 use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
