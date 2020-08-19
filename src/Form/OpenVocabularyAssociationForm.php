@@ -141,13 +141,13 @@ class OpenVocabularyAssociationForm extends EntityForm {
         'number' => $this->t('Limited'),
         OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED => $this->t('Unlimited'),
       ],
-      '#default_value' => ($entity->getCardinality() == OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED) ? OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED : 'number',
+      '#default_value' => ($entity->getCardinality() === OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED) ? OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED : 'number',
       '#disabled' => !$entity->isNew(),
     ];
 
     $form['cardinality_wrapper']['cardinality_number'] = [
       '#type' => 'number',
-      '#default_value' => is_int($entity->getCardinality()) && $entity->getCardinality() != OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED ? $entity->getCardinality() : 1,
+      '#default_value' => is_int($entity->getCardinality()) && $entity->getCardinality() !== OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED ? $entity->getCardinality() : 1,
       '#min' => 1,
       '#title' => $this->t('Limit'),
       '#title_display' => 'invisible',
