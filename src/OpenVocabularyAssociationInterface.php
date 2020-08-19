@@ -81,7 +81,7 @@ interface OpenVocabularyAssociationInterface extends ConfigEntityInterface {
   public function getHelpText(): ?string;
 
   /**
-   * Get the vocabulary association weight.
+   * Returns the vocabulary association weight.
    *
    * @return int
    *   The weight.

@@ -13,8 +13,8 @@ use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
  *
  * @ConfigEntityType(
  *   id = "open_vocabulary_association",
- *   label = @Translation("Vocabulary Association"),
- *   label_collection = @Translation("Vocabulary Associations"),
+ *   label = @Translation("Vocabulary association"),
+ *   label_collection = @Translation("Vocabulary associations"),
  *   label_singular = @Translation("vocabulary association"),
  *   label_plural = @Translation("vocabulary associations"),
  *   label_count = @PluralTranslation(

@@ -20,7 +20,7 @@ open_vocabularies.open_vocabulary.*:
 
 open_vocabularies.open_vocabulary_association.*:
   type: config_entity
-  label: Vocabulary Association
+  label: 'Vocabulary association'
   mapping:
     id:
       type: string
@@ -30,31 +30,31 @@ open_vocabularies.open_vocabulary_association.*:
       label: Label
     name:
       type: string
-      label: The machine name
+      label: 'Machine name'
     fields:
       type: sequence
       label: Fields
       sequence:
         type: string
-        label: Field name
+        label: 'Field name'
     widget_type:
       type: string
-      label: The widget type
+      label: 'Widget type'
     vocabulary:
       type: string
-      label: The vocabulary name
+      label: 'Vocabulary configuration ID'
     cardinality:
       type: integer
-      label: The cardinality
+      label: 'Maximum number of values users can enter'
     required:
       type: boolean
-      label: Whether the field is required
+      label: 'Whether the field is required'
     predicate:
       type: string
-      label: The predicate
+      label: Predicate
     help_text:
       type: text
-      label: The help text
+      label: 'Field help text'
     weight:
       type: integer
-      label: 'Weight'
+      label: Weight
