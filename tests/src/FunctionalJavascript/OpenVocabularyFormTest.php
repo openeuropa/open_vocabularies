@@ -2,56 +2,19 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\open_vocabularies\src\FunctionalJavascript;
-
-use Drupal\entity_test\Entity\EntityTestBundle;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
 /**
  * Tests the open vocabulary entity forms.
  *
  * @group open_vocabularies
  */
-class OpenVocabularyFormTest extends WebDriverTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'open_vocabularies',
-    'open_vocabularies_test',
-    'block',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->drupalPlaceBlock('local_actions_block');
-    $this->drupalPlaceBlock('system_messages_block');
-    $this->drupalPlaceBlock('page_title_block');
-
-    EntityTestBundle::create([
-      'id' => 'alpha',
-      'label' => 'Alpha',
-    ])->save();
-    EntityTestBundle::create([
-      'id' => 'beta',
-      'label' => 'Beta',
-    ])->save();
-  }
+class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
   /**
    * Tests the create, update and delete routes.
    */
-  public function testCreationUpdateDeletion(): void {
+  public function testVocabularyCreationUpdateDeletion(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer open vocabularies',
       'access content',

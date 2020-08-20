@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\open_vocabularies\src\Kernel;
+namespace Drupal\Tests\open_vocabularies\Kernel;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;

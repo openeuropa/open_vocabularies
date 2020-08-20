@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\open_vocabularies\Form;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @property \Drupal\open_vocabularies\OpenVocabularyInterface $entity
  */
-class OpenVocabularyForm extends EntityForm implements ContainerInjectionInterface {
+class OpenVocabularyForm extends EntityForm {
 
   /**
    * The reference handler plugin manager.

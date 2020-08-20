@@ -39,7 +39,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Drupal\\Tests\\open_vocabularies\\": "./tests/"
+            "Drupal\\Tests\\open_vocabularies\\": "./tests/src/"
         }
     },
     "extra": {

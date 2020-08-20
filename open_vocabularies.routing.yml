@@ -29,3 +29,35 @@ entity.open_vocabulary.delete_form:
     _title: 'Delete vocabulary'
   requirements:
     _permission: 'administer open vocabularies'
+
+entity.open_vocabulary_association.collection:
+  path: '/admin/structure/open-vocabulary-association'
+  defaults:
+    _entity_list: 'open_vocabulary_association'
+    _title: 'Vocabulary Association configuration'
+  requirements:
+    _permission: 'administer open vocabulary associations'
+
+entity.open_vocabulary_association.add_form:
+  path: '/admin/structure/open_vocabulary_association/add'
+  defaults:
+    _entity_form: 'open_vocabulary_association.add'
+    _title: 'Add vocabulary association'
+  requirements:
+    _permission: 'administer open vocabulary associations'
+
+entity.open_vocabulary_association.edit_form:
+  path: '/admin/structure/open-vocabulary-association/{open_vocabulary_association}'
+  defaults:
+    _entity_form: 'open_vocabulary_association.edit'
+    _title: 'Edit vocabulary association'
+  requirements:
+    _permission: 'administer open vocabulary associations'
+
+entity.open_vocabulary_association.delete_form:
+  path: '/admin/structure/open-vocabulary-association/{open_vocabulary_association}/delete'
+  defaults:
+    _entity_form: 'open_vocabulary_association.delete'
+    _title: 'Delete vocabulary association'
+  requirements:
+    _permission: 'administer open vocabulary associations'

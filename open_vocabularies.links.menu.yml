@@ -1,5 +1,11 @@
 entity.open_vocabulary.overview:
   title: Vocabularies
   parent: system.admin_structure
-  description: 'Create and manage open vocabularies and their associations.'
+  description: 'Create and manage vocabularies.'
   route_name: entity.open_vocabulary.collection
+
+entity.open_vocabulary_association.overview:
+  title: 'Vocabulary associations'
+  parent: system.admin_structure
+  description: 'Create and manage vocabulary associations.'
+  route_name: entity.open_vocabulary_association.collection
