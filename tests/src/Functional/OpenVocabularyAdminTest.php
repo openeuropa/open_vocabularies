@@ -65,8 +65,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
       'label' => $this->randomString(),
       'vocabulary' => $vocabulary->id(),
       'name' => strtolower($this->randomMachineName()),
-      // @todo change after using widget.
-      'widget_type' => 'test_entity_plugin',
+      'widget_type' => 'options_select',
       'required' => TRUE,
       'help_text' => 'Some text',
       'predicate' => 'http://example.com/#name',
@@ -180,7 +179,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
       'label' => 'Association 0',
       'vocabulary' => $vocabulary->id(),
       'name' => 'association_0',
-      'widget_type' => 'test_alter_hook',
+      'widget_type' => 'options_select',
     ];
     $association = OpenVocabularyAssociation::create($values);
     $association->save();
@@ -202,7 +201,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
       $cells = $rows[$row]->findAll('xpath', '/td');
       $this->assertEquals($label, $cells[0]->getText());
       $this->assertEquals('association_' . $row, $cells[1]->getText());
-      $this->assertEquals('Tests the info alter hook', $cells[2]->getText());
+      $this->assertEquals('Select list', $cells[2]->getText());
       $this->assertEquals($vocabulary->label(), $cells[3]->getText());
       // Assert the weight value which in the beginning is the same as the row
       // number.

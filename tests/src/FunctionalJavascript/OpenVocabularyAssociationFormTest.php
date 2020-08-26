@@ -58,14 +58,14 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
 
     // @todo add test once we have field values.
     $assert_session->fieldExists('Fields');
-    // @todo change after using widget.
     $this->assertFieldSelectOptions('Widget type', [
       '- Select -',
-      'Test entities',
-      'Tests the info alter hook',
-      'Entity test with bundle',
+      'Autocomplete',
+      'Autocomplete (Tags style)',
+      'Check boxes/radio buttons',
+      'Select list',
     ]);
-    $this->getSession()->getPage()->selectFieldOption('Widget type', 'Test entities');
+    $this->getSession()->getPage()->selectFieldOption('Widget type', 'Select list');
     $this->assertFieldSelectOptions('Vocabulary', [
       '- Select -',
       $vocabulary->label(),
@@ -100,8 +100,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $this->assertInstanceOf(OpenVocabularyAssociationInterface::class, $association);
     $this->assertEquals('association_1', $association->getName());
     $this->assertEquals('Association 1', $association->label());
-    // @todo change after using widget.
-    $this->assertEquals('test_entity_plugin', $association->getWidgetType());
+    $this->assertEquals('options_select', $association->getWidgetType());
     $this->assertEquals($vocabulary->id(), $association->getVocabulary());
     $this->assertEquals(1, $association->getCardinality());
     // @todo update the predicate.
@@ -116,8 +115,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldDisabled('Allowed number of values');
     $assert_session->fieldDisabled('Limit');
     $assert_session->fieldValueEquals('Label', 'Association 1');
-    // @todo change after using widget.
-    $assert_session->fieldValueEquals('Widget type', 'test_entity_plugin');
+    $assert_session->fieldValueEquals('Widget type', 'options_select');
     $assert_session->fieldValueEquals('Vocabulary', $vocabulary->id());
     // @todo update the predicate.
     $assert_session->fieldValueEquals('Predicate', 'http://example.com/#contain');

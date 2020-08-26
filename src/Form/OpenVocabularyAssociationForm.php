@@ -6,6 +6,7 @@ namespace Drupal\open_vocabularies\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
@@ -27,6 +28,13 @@ class OpenVocabularyAssociationForm extends EntityForm {
   protected $referenceHandlerManager;
 
   /**
+   * The field widget plugin manager.
+   *
+   * @var \Drupal\Core\Field\WidgetPluginManager
+   */
+  protected $widgetManager;
+
+  /**
    * Instantiates a new instance of the form.
    *
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
@@ -35,11 +43,14 @@ class OpenVocabularyAssociationForm extends EntityForm {
    *   The entity type manager.
    * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
    *   The reference handler plugin manager.
+   * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
+   *   The field widget plugin manager.
    */
-  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager) {
+  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager, WidgetPluginManager $widgetManager) {
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
     $this->referenceHandlerManager = $referenceHandlerManager;
+    $this->widgetManager = $widgetManager;
   }
 
   /**
@@ -49,7 +60,8 @@ class OpenVocabularyAssociationForm extends EntityForm {
     return new static(
       $container->get('messenger'),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler')
+      $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler'),
+      $container->get('plugin.manager.field.widget')
     );
   }
 
@@ -90,12 +102,10 @@ class OpenVocabularyAssociationForm extends EntityForm {
       '#disabled' => !$entity->isNew(),
     ];
 
-    // @todo change this to the widget handlers.
-    $widgets = $this->referenceHandlerManager->getDefinitionsAsOptions();
     $form['widget_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Widget type'),
-      '#options' => $widgets,
+      '#options' => $this->widgetManager->getOptions('entity_reference'),
       '#default_value' => $entity->getWidgetType(),
       '#required' => TRUE,
     ];
