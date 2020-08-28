@@ -272,8 +272,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
   protected function getAvailableFields(): array {
     $storage = $this->entityTypeManager->getStorage('field_config');
     $query = $storage->getQuery();
-    // @todo create field type.
-    $query->condition('field_type', 'open_vocabularies_field');
+    $query->condition('field_type', 'open_vocabulary_reference');
     $results = $query->execute();
 
     $fields = [];
