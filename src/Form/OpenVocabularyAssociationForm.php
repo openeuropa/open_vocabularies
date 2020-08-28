@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\open_vocabularies\Form;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
@@ -19,6 +20,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @property \Drupal\open_vocabularies\OpenVocabularyAssociationInterface $entity
  */
 class OpenVocabularyAssociationForm extends EntityForm {
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * The reference handler plugin manager.
@@ -43,13 +51,16 @@ class OpenVocabularyAssociationForm extends EntityForm {
    *   The entity type manager.
    * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
    *   The reference handler plugin manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity field manager.
    * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
    *   The field widget plugin manager.
    */
-  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager, WidgetPluginManager $widgetManager) {
+  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager, EntityFieldManagerInterface $entityFieldManager, WidgetPluginManager $widgetManager) {
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
     $this->referenceHandlerManager = $referenceHandlerManager;
+    $this->entityFieldManager = $entityFieldManager;
     $this->widgetManager = $widgetManager;
   }
 
@@ -61,6 +72,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
       $container->get('messenger'),
       $container->get('entity_type.manager'),
       $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler'),
+      $container->get('entity_field.manager'),
       $container->get('plugin.manager.field.widget')
     );
   }
@@ -220,6 +232,11 @@ class OpenVocabularyAssociationForm extends EntityForm {
       : $this->t('Updated vocabulary association %label.', $message_args);
     $this->messenger->addStatus($message);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+
+    // Clear all the field information to allow computed fields to be added or
+    // updated.
+    $this->entityFieldManager->clearCachedFieldDefinitions();
+
     return $result;
   }
 
