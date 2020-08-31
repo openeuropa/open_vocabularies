@@ -16,7 +16,8 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
  *   label = @Translation("Vocabulary reference"),
  *   category = @Translation("Open vocabulary"),
  *   default_widget = "open_vocabulary_reference_widget",
- *   default_formatter = "string"
+ *   default_formatter = "string",
+ *   list_class = "\Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList"
  * )
  */
 class VocabularyReferenceItem extends FieldItemBase {
@@ -36,7 +37,7 @@ class VocabularyReferenceItem extends FieldItemBase {
           'description' => 'The ID of the target entity.',
           'type' => 'varchar_ascii',
           'length' => 255,
-        ]
+        ],
       ],
       'indexes' => [
         'target_id' => ['target_id'],
@@ -55,9 +56,9 @@ class VocabularyReferenceItem extends FieldItemBase {
       return FALSE;
     }
     // @todo reinstate after the property is set in place.
-    //if ($this->entity && $this->entity instanceof EntityInterface) {
-    //  return FALSE;
-    //}
+    // if ($this->entity && $this->entity instanceof EntityInterface) {
+    //   return FALSE;
+    // }
     return TRUE;
   }
 
