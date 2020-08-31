@@ -45,7 +45,9 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
    * {@inheritdoc}
    */
   public function onChange($delta) {
-    // @todo Verify and implement.
+    // Update all the values whenever a single item or propery is changed.
+    $this->updateVocabularyReferenceField($this->getValue());
+
     parent::onChange($delta);
   }
 
@@ -55,6 +57,16 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
   public function setValue($values, $notify = TRUE) {
     $this->traitSetValue($values, $notify);
 
+    $this->updateVocabularyReferenceField($this->getValue());
+  }
+
+  /**
+   * Updates the values stored in the vocabulary reference field.
+   *
+   * @param array $values
+   *   The values to store.
+   */
+  protected function updateVocabularyReferenceField(array $values): void {
     $association_id = $this->getSetting('open_vocabulary_association');
     $field_name = $this->getSetting('open_vocabulary_reference_field');
 
