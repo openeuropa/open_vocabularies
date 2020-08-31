@@ -52,7 +52,7 @@ class VocabularyReferenceItem extends FieldItemBase {
   public function isEmpty() {
     // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
     // Avoid loading the entity by first checking the 'target_id'.
-    if ($this->target_id !== NULL) {
+    if ($this->target_id !== NULL && $this->target_association !== NULL) {
       return FALSE;
     }
     // @todo reinstate after the property is set in place.
