@@ -28,7 +28,7 @@ class VocabularyReferenceItem extends FieldItemBase {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return [
       'columns' => [
-        'target_association' => [
+        'target_association_id' => [
           'type' => 'varchar_ascii',
           'description' => 'The ID of the association config entity.',
           'length' => 255,
@@ -41,7 +41,7 @@ class VocabularyReferenceItem extends FieldItemBase {
       ],
       'indexes' => [
         'target_id' => ['target_id'],
-        'target_association' => ['target_association'],
+        'target_association_id' => ['target_association_id'],
       ],
     ];
   }
@@ -52,7 +52,7 @@ class VocabularyReferenceItem extends FieldItemBase {
   public function isEmpty() {
     // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
     // Avoid loading the entity by first checking the 'target_id'.
-    if ($this->target_id !== NULL && $this->target_association !== NULL) {
+    if ($this->target_id !== NULL && $this->target_association_id !== NULL) {
       return FALSE;
     }
     // @todo reinstate after the property is set in place.
@@ -66,7 +66,7 @@ class VocabularyReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['target_association'] = DataReferenceTargetDefinition::create('string')
+    $properties['target_association_id'] = DataReferenceTargetDefinition::create('string')
       ->setLabel(t('Association config entity ID'))
       ->setRequired(TRUE);
 

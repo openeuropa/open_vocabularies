@@ -31,10 +31,10 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
     // @see \Drupal\Core\TypedData\ComputedItemListTrait::appendItem()
     $delta = 0;
     foreach ($items as $item) {
-      if (!$item->isEmpty() && $item->target_association === $association_id) {
+      if (!$item->isEmpty() && $item->target_association_id === $association_id) {
         $value = $item->getValue();
         // Remove the association value as the item is an entity reference.
-        unset($value['target_association']);
+        unset($value['target_association_id']);
         $this->list[$delta] = $this->createItem($delta, $value);
         $delta++;
       }
@@ -76,7 +76,7 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
     // them in the newly updated order.
     $item_list->filterValuesByTargetAssociation($association_id);
     foreach ($values as $value) {
-      $value['target_association'] = $association_id;
+      $value['target_association_id'] = $association_id;
       $item_list->appendItem($value);
     }
   }
