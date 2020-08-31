@@ -12,22 +12,30 @@ use Drupal\Core\TypedData\ComputedItemListTrait;
  */
 class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemList {
 
-  use ComputedItemListTrait;
+  use ComputedItemListTrait {
+    setValue as traitSetValue;
+  }
 
   /**
    * {@inheritdoc}
    */
   protected function computeValue() {
-    $association = $this->getSetting('open_vocabulary_association');
+    $association_id = $this->getSetting('open_vocabulary_association');
     $field_name = $this->getSetting('open_vocabulary_reference_field');
-    $entity = $this->getEntity();
-    $existing = $entity->get($field_name)->getValue();
 
+    /** @var \Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemListInterface $items */
+    $items = $this->getEntity()->get($field_name);
+    // We cannot use the ::append() method, as it will recursively call this
+    // method again, since the value is not marked as computed yet. We keep
+    // track of the delta manually and use the ::createItem() instead.
+    // @see \Drupal\Core\TypedData\ComputedItemListTrait::appendItem()
     $delta = 0;
-    foreach ($existing as $item) {
-      if (isset($item['target_association']) && $item['target_association'] === $association) {
-        unset($item['target_association']);
-        $this->list[$delta] = $this->createItem($delta, $item);
+    foreach ($items as $item) {
+      if (!$item->isEmpty() && $item->target_association === $association_id) {
+        $value = $item->getValue();
+        // Remove the association value as the item is an entity reference.
+        unset($value['target_association']);
+        $this->list[$delta] = $this->createItem($delta, $value);
         $delta++;
       }
     }
@@ -45,25 +53,19 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    parent::setValue($values, $notify);
+    $this->traitSetValue($values, $notify);
 
-    $association = $this->getSetting('open_vocabulary_association');
+    $association_id = $this->getSetting('open_vocabulary_association');
     $field_name = $this->getSetting('open_vocabulary_reference_field');
-    $entity = $this->getEntity();
-    $existing = $entity->get($field_name)->getValue();
-    foreach ($existing as $delta => $item) {
-      // Drop values.
-      if (empty($item)) {
-        unset($existing[$delta]);
-      }
-      if (isset($item['target_association']) && $item['target_association'] === $association) {
-        unset($existing[$delta]);
-      }
-    }
-    $entity->get($field_name)->setValue($existing);
+
+    /** @var \Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemListInterface $item_list */
+    $item_list = $this->getEntity()->get($field_name);
+    // Remove all the values belonging to this association, so we can re-append
+    // them in the newly updated order.
+    $item_list->filterValuesByTargetAssociation($association_id);
     foreach ($values as $value) {
-      $value['target_association'] = $association;
-      $entity->get($field_name)->appendItem($value);
+      $value['target_association'] = $association_id;
+      $item_list->appendItem($value);
     }
   }
 
