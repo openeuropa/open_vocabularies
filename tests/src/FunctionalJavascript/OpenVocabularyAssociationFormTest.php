@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
-use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
 
 /**
  * Tests the open vocabulary association entity forms.
@@ -16,6 +16,7 @@ use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
 class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
 
   use NativeBrowserValidationTrait;
+  use VocabularyCreationTrait;
 
   /**
    * Tests the create, update and delete routes.
@@ -26,19 +27,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
       'access content',
     ]));
 
-    // Create a vocabulary.
-    $values = [
-      'id' => strtolower($this->randomMachineName()),
-      'label' => $this->randomString(),
-      'handler' => 'test_entity_plugin',
-      'handler_settings' => [
-        'target_bundles' => [
-          'entity_test' => 'entity_test',
-        ],
-      ],
-    ];
-    $vocabulary = OpenVocabulary::create($values);
-    $vocabulary->save();
+    $vocabulary = $this->createVocabulary();
 
     // Create a vocabulary association.
     $this->drupalGet('/admin/structure/open-vocabulary-association');
