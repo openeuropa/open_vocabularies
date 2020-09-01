@@ -63,6 +63,7 @@ trait VocabularyCreationTrait {
       'help_text' => 'Some text',
       'predicate' => 'http://example.com/#name',
       'cardinality' => 5,
+      'fields' => [],
     ];
     $values['vocabulary'] = $vocabulary_id;
 

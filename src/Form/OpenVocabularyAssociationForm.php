@@ -109,8 +109,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
       '#multiple' => TRUE,
       '#options' => $this->getAvailableFields(),
       '#default_value' => $entity->getFields(),
-      // @todo make required once we have the field type.
-      '#required' => FALSE,
+      '#required' => TRUE,
       '#disabled' => !$entity->isNew(),
     ];
 
