@@ -266,6 +266,10 @@ class OpenVocabularyAssociationForm extends EntityForm {
   /**
    * Returns the available field types to use for the association.
    *
+   * @todo Fix this method:
+   *   - do not rely on field config to find the fields;
+   *   - generate properly the option labels.
+   *
    * @return array
    *   The field type names in select option format.
    */

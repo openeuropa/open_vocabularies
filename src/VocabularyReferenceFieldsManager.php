@@ -144,6 +144,8 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
    * programmatically, we don't use hook_entity_bundle_field_info() as normally
    * fields should be declared in that hook.
    *
+   * @todo Actually add support for non-config defined fields.
+   *
    * @param \Drupal\Core\Field\FieldDefinitionInterface[] $fields
    *   The array of bundle field definitions.
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
