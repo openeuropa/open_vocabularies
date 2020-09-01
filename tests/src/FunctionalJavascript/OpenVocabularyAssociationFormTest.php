@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
 use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
@@ -17,6 +19,53 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
 
   use NativeBrowserValidationTrait;
   use VocabularyCreationTrait;
+
+  /**
+   * The field instance labels created for this test, keyed by field name.
+   *
+   * @var array
+   */
+  protected $fieldInstances = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Create three vocabulary reference field instances. Prefix them with
+    // defined characters so we can expect the order.
+    foreach (['a', 'b', 'c'] as $prefix) {
+      $storage = FieldStorageConfig::create([
+        'field_name' => $prefix . strtolower($this->randomMachineName()),
+        'entity_type' => 'entity_test',
+        'type' => 'open_vocabulary_reference',
+      ]);
+      $storage->save();
+      $instance = FieldConfig::create([
+        'field_storage' => $storage,
+        'bundle' => 'entity_test',
+        'label' => $this->randomString(),
+      ]);
+      $instance->save();
+      $this->fieldInstances[$instance->id()] = $instance->label();
+    }
+
+    // Create a field of another type.
+    $storage = FieldStorageConfig::create([
+      'field_name' => strtolower($this->randomMachineName()),
+      'entity_type' => 'entity_test',
+      'type' => 'entity_reference',
+      'settings' => [
+        'target_type' => 'entity_test',
+      ],
+    ]);
+    $storage->save();
+    FieldConfig::create([
+      'field_storage' => $storage,
+      'bundle' => 'entity_test',
+    ])->save();
+  }
 
   /**
    * Tests the create, update and delete routes.
@@ -41,35 +90,48 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     // Verify that the correct fields are marked as required.
     $this->disableNativeBrowserRequiredFieldValidation();
     $this->getSession()->getPage()->pressButton('Save');
+    $assert_session->pageTextContains('Fields field is required.');
     $assert_session->pageTextContains('Widget type field is required.');
     $assert_session->pageTextContains('Vocabulary field is required.');
     $assert_session->pageTextContains('Predicate field is required.');
 
-    // @todo add test once we have field values.
-    $assert_session->fieldExists('Fields');
-    $this->assertFieldSelectOptions('Widget type', [
-      '- Select -',
-      'Autocomplete',
-      'Autocomplete (Tags style)',
-      'Check boxes/radio buttons',
-      'Select list',
-    ]);
+    // Verify that the correct fields options are listed.
+    $expected_options = array_map(function (string $label): string {
+      return sprintf('Field %s on entity entity_test, bundle entity_test', $label);
+    }, $this->fieldInstances);
+    $this->assertEquals($expected_options, $this->getOptions('Fields'));
+    // Select two out of the three options.
+    $options_selected = array_keys($this->fieldInstances);
+    unset($options_selected[2]);
+    $this->getSession()->getPage()->selectFieldOption('Fields', $options_selected[0]);
+    $this->getSession()->getPage()->selectFieldOption('Fields', $options_selected[1], TRUE);
+
+    $this->assertEquals([
+      '- Select -' => '- Select -',
+      'options_buttons' => 'Check boxes/radio buttons',
+      'entity_reference_autocomplete' => 'Autocomplete',
+      'options_select' => 'Select list',
+      'entity_reference_autocomplete_tags' => 'Autocomplete (Tags style)',
+    ], $this->getOptions('Widget type'));
     $this->getSession()->getPage()->selectFieldOption('Widget type', 'Select list');
-    $this->assertFieldSelectOptions('Vocabulary', [
-      '- Select -',
-      $vocabulary->label(),
-    ]);
+
+    $this->assertEquals([
+      '- Select -' => '- Select -',
+      $vocabulary->id() => $vocabulary->label(),
+    ], $this->getOptions('Vocabulary'));
     $this->getSession()->getPage()->selectFieldOption('Vocabulary', $vocabulary->label());
-    $this->assertFieldSelectOptions('Predicate', [
-      '- Select -',
-      'Contain',
-      'About',
-    ]);
+
+    $this->assertEquals([
+      '- Select -' => '- Select -',
+      'http://example.com/#contain' => 'Contain',
+      'http://example.com/#about' => 'About',
+    ], $this->getOptions('Predicate'));
     $this->getSession()->getPage()->selectFieldOption('Predicate', 'Contain');
-    $this->assertFieldSelectOptions('Allowed number of values', [
+
+    $this->assertEquals([
       'Limited',
       'Unlimited',
-    ]);
+    ], array_values($this->getOptions('Allowed number of values')));
     $assert_session->fieldValueEquals('Allowed number of values', 'number');
     $assert_session->fieldValueEquals('Limit', 1);
 
@@ -89,6 +151,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $this->assertInstanceOf(OpenVocabularyAssociationInterface::class, $association);
     $this->assertEquals('association_1', $association->getName());
     $this->assertEquals('Association 1', $association->label());
+    $this->assertEquals($options_selected, $association->getFields());
     $this->assertEquals('options_select', $association->getWidgetType());
     $this->assertEquals($vocabulary->id(), $association->getVocabulary());
     $this->assertEquals(1, $association->getCardinality());
@@ -104,6 +167,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldDisabled('Allowed number of values');
     $assert_session->fieldDisabled('Limit');
     $assert_session->fieldValueEquals('Label', 'Association 1');
+    $this->assertEquals($options_selected, $assert_session->selectExists('Fields')->getValue());
     $assert_session->fieldValueEquals('Widget type', 'options_select');
     $assert_session->fieldValueEquals('Vocabulary', $vocabulary->id());
     // @todo update the predicate.
