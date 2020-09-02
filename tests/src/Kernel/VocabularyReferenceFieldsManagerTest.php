@@ -159,7 +159,6 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
     /** @var \Drupal\open_vocabularies\Entity\OpenVocabularyAssociation $association_two */
     $association_two->save();
 
-    $field_manager->clearCachedFieldDefinitions();
     $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_a');
     // Two definitions should have been created.
     $this->assertEquals([
@@ -244,7 +243,6 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
 
     // Change the label of an association.
     $association_two->set('label', $this->randomString())->save();
-    $field_manager->clearCachedFieldDefinitions();
 
     // Verify that the related field definitions have been updated.
     $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_a');
