@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\Kernel;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\EntityDisplayBase;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
@@ -75,7 +79,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'bundle' => 'bundle_a',
     ])->save();
 
-    // Create a field present only in a bundle, that will not be targetted
+    // Create a field present only in a bundle, that will not be targeted
     // by any vocabularies.
     $storage = FieldStorageConfig::create([
       'field_name' => 'only_bundle_b',
@@ -87,17 +91,10 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'field_storage' => $storage,
       'bundle' => 'bundle_b',
     ])->save();
-  }
 
-  /**
-   * Tests that base field definitions are created based on associations.
-   *
-   * @covers ::entityBundleFieldInfoAlter()
-   */
-  public function testEntityBundleFieldInfoAlter(): void {
     // Create two different vocabularies. We need static IDs so we can rely on
     // the expected names for the generated fields.
-    $vocabulary_one = $this->createVocabulary([
+    $this->createVocabulary([
       'id' => 'vocabulary_one',
       'handler' => 'entity_test_with_bundle',
       'handler_settings' => [
@@ -107,10 +104,17 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
         ],
       ],
     ]);
-    $vocabulary_two = $this->createVocabulary([
+    $this->createVocabulary([
       'id' => 'vocabulary_two',
     ]);
+  }
 
+  /**
+   * Tests that field definitions are created based on associations.
+   *
+   * @covers ::entityBundleFieldInfoAlter()
+   */
+  public function testEntityBundleFieldInfoAlter(): void {
     // Collect all the existing field definitions for the various bundles.
     $field_manager = $this->container->get('entity_field.manager');
     $existing_definitions = [
@@ -123,7 +127,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
     $association_one = OpenVocabularyAssociation::create([
       'label' => 'Association one',
       'name' => 'association_one',
-      'vocabulary' => $vocabulary_one->id(),
+      'vocabulary' => 'vocabulary_one',
       'widget_type' => 'options_select',
       'required' => TRUE,
       'help_text' => 'Help text to serve as description.',
@@ -146,7 +150,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
     $association_two = OpenVocabularyAssociation::create([
       'label' => 'Association two',
       'name' => 'association_two',
-      'vocabulary' => $vocabulary_two->id(),
+      'vocabulary' => 'vocabulary_two',
       'widget_type' => 'options_buttons',
       'required' => FALSE,
       'predicate' => 'http://example.com/#about',
@@ -159,8 +163,21 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
     /** @var \Drupal\open_vocabularies\Entity\OpenVocabularyAssociation $association_two */
     $association_two->save();
 
+    // Prepare the expected handler settings for later usage.
+    $vocabulary_one_handler_settings = [
+      'target_bundles' => [
+        'referencable_one' => 'referencable_one',
+        'referencable_two' => 'referencable_two',
+      ],
+    ];
+    $vocabulary_two_handler_settings = [
+      'target_bundles' => [
+        'entity_test' => 'entity_test',
+      ],
+    ];
+
     $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_a');
-    // Two definitions should have been created.
+    // Three definitions should have been created.
     $this->assertEquals([
       'association_one_94ab077978',
       'association_one_1c8d2512e6',
@@ -175,7 +192,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'settings' => [
         'target_type' => 'entity_test_with_bundle',
         'handler' => 'default',
-        'handler_settings' => $vocabulary_one->getHandlerSettings(),
+        'handler_settings' => $vocabulary_one_handler_settings,
         'open_vocabulary_association' => $association_one->id(),
         'open_vocabulary_reference_field' => 'multiple_bundles',
       ],
@@ -192,7 +209,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'settings' => [
         'target_type' => 'entity_test_with_bundle',
         'handler' => 'default',
-        'handler_settings' => $vocabulary_one->getHandlerSettings(),
+        'handler_settings' => $vocabulary_one_handler_settings,
         'open_vocabulary_association' => $association_one->id(),
         'open_vocabulary_reference_field' => 'only_bundle_a',
       ],
@@ -209,7 +226,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'settings' => [
         'target_type' => 'entity_test',
         'handler' => 'default',
-        'handler_settings' => $vocabulary_two->getHandlerSettings(),
+        'handler_settings' => $vocabulary_two_handler_settings,
         'open_vocabulary_association' => $association_two->id(),
         'open_vocabulary_reference_field' => 'only_bundle_a',
       ],
@@ -232,7 +249,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'settings' => [
         'target_type' => 'entity_test',
         'handler' => 'default',
-        'handler_settings' => $vocabulary_two->getHandlerSettings(),
+        'handler_settings' => $vocabulary_two_handler_settings,
         'open_vocabulary_association' => $association_two->id(),
         'open_vocabulary_reference_field' => 'multiple_bundles',
       ],
@@ -254,7 +271,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'settings' => [
         'target_type' => 'entity_test',
         'handler' => 'default',
-        'handler_settings' => $vocabulary_two->getHandlerSettings(),
+        'handler_settings' => $vocabulary_two_handler_settings,
         'open_vocabulary_association' => $association_two->id(),
         'open_vocabulary_reference_field' => 'only_bundle_a',
       ],
@@ -272,7 +289,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'settings' => [
         'target_type' => 'entity_test',
         'handler' => 'default',
-        'handler_settings' => $vocabulary_two->getHandlerSettings(),
+        'handler_settings' => $vocabulary_two_handler_settings,
         'open_vocabulary_association' => $association_two->id(),
         'open_vocabulary_reference_field' => 'multiple_bundles',
       ],
@@ -280,6 +297,154 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'target_entity_type_id' => 'entity_test_with_bundle',
       'target_bundle' => 'bundle_b',
     ], $definitions['association_two_94ab077978']);
+  }
+
+  /**
+   * Tests that the generated field definitions are placed into the entity form.
+   *
+   * @covers ::entityFormDisplayAlter()
+   */
+  public function testEntityFormDisplayAlter(): void {
+    $this->createVocabularyAssociation('vocabulary_one', [
+      'name' => 'association_one',
+      'fields' => [
+        'entity_test_with_bundle.bundle_a.multiple_bundles',
+      ],
+    ]);
+
+    /** @var \Drupal\entity_test\Entity\EntityTestWithBundle $entity */
+    $entity = EntityTestWithBundle::create(['type' => 'bundle_a']);
+
+    // Load the form display.
+    $render_form_display = EntityFormDisplay::collectRenderDisplay($entity, EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);
+
+    // Only the default fields are placed in the form display.
+    $this->assertEquals([
+      'langcode',
+      'name',
+    ], array_keys($render_form_display->getComponents()));
+
+    // Since no changes were done in the form, the mode has not been changed.
+    $this->assertEquals(EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE, $render_form_display->getMode());
+
+    // Place the "multiple_bundles" vocabulary reference field with a specific
+    // weight.
+    /** @var \Drupal\Core\Entity\Entity\EntityFormDisplay $form_display */
+    $form_display = $this->container->get('entity_display.repository')->getFormDisplay('entity_test_with_bundle', 'bundle_a');
+    $form_display->setComponent('multiple_bundles', [
+      'type' => 'open_vocabulary_reference_widget',
+      'weight' => -10,
+    ]);
+    $form_display = $this->entitySaveReload($form_display);
+
+    // Reload the form display that will be used for rendering.
+    $render_form_display = EntityFormDisplay::collectRenderDisplay($entity, EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);
+    // The computed field definition should be placed amongst the visible
+    // components, while the original vocabulary reference field should be
+    // now hidden.
+    $this->assertEquals([
+      'langcode',
+      'name',
+      'association_one_94ab077978',
+    ], array_keys($render_form_display->getComponents()));
+
+    // Since changes in the form were done, the render form display has been
+    // marked as custom.
+    $this->assertEquals(EntityDisplayBase::CUSTOM_MODE, $render_form_display->getMode());
+
+    // Verify that the field is using the correct widget specified in the
+    // association. We use the subset assertion as the component has extra
+    // settings key which we don't set and are defaulted.
+    $this->assertArraySubset([
+      'type' => 'options_select',
+      'weight' => -10,
+      'region' => 'content',
+    ], $render_form_display->getComponent('association_one_94ab077978'));
+
+    // Create another vocabulary association, pointing to two fields of the
+    // entity.
+    $this->createVocabularyAssociation('vocabulary_one', [
+      'name' => 'association_two',
+      'widget_type' => 'entity_reference_autocomplete',
+      'fields' => [
+        'entity_test_with_bundle.bundle_a.multiple_bundles',
+        'entity_test_with_bundle.bundle_a.only_bundle_a',
+      ],
+    ]);
+
+    $render_form_display = EntityFormDisplay::collectRenderDisplay($entity, EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);
+    // The second association generated two computed fields, but only one is
+    // placed into the form display as the related vocabulary reference field
+    // has no widget placed into the form yet.
+    $this->assertEquals([
+      'langcode',
+      'name',
+      'association_one_94ab077978',
+      'association_two_94ab077978',
+    ], array_keys($render_form_display->getComponents()));
+
+    $this->assertArraySubset([
+      'type' => 'options_select',
+      'weight' => -10,
+      'region' => 'content',
+    ], $render_form_display->getComponent('association_one_94ab077978'));
+    $this->assertArraySubset([
+      'type' => 'entity_reference_autocomplete',
+      'weight' => -9.999,
+      'region' => 'content',
+    ], $render_form_display->getComponent('association_two_94ab077978'));
+
+    // Place the "only_bundle_a" field into the form display into a custom
+    // region.
+    $form_display->setComponent('only_bundle_a', [
+      'type' => 'open_vocabulary_reference_widget',
+      'weight' => 0,
+      'region' => 'custom_region',
+    ]);
+    $form_display->save();
+
+    $render_form_display = EntityFormDisplay::collectRenderDisplay($entity, EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);
+    $this->assertEquals([
+      'langcode',
+      'name',
+      'association_one_94ab077978',
+      'association_two_94ab077978',
+      'association_two_1c8d2512e6',
+    ], array_keys($render_form_display->getComponents()));
+
+    // The field has inherited the region from the vocabulary reference field
+    // widget.
+    $this->assertArraySubset([
+      'type' => 'entity_reference_autocomplete',
+      'weight' => 0.001,
+      'region' => 'custom_region',
+    ], $render_form_display->getComponent('association_two_1c8d2512e6'));
+
+    // Create another vocabulary association and set its weight higher than
+    // the others.
+    $this->createVocabularyAssociation('vocabulary_one', [
+      'name' => 'association_three',
+      'widget_type' => 'options_buttons',
+      'fields' => [
+        'entity_test_with_bundle.bundle_a.multiple_bundles',
+      ],
+    ])->set('weight', -20)->save();
+
+    $render_form_display = EntityFormDisplay::collectRenderDisplay($entity, EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE);
+    $this->assertEquals([
+      'langcode',
+      'name',
+      'association_three_94ab077978',
+      'association_one_94ab077978',
+      'association_two_94ab077978',
+      'association_two_1c8d2512e6',
+    ], array_keys($render_form_display->getComponents()));
+
+    $this->assertArraySubset([
+      'type' => 'options_buttons',
+      'weight' => -10.02,
+      'region' => 'content',
+    ], $render_form_display->getComponent('association_three_94ab077978'));
   }
 
   /**
