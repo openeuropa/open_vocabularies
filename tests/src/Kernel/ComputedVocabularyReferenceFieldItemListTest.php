@@ -233,32 +233,92 @@ class ComputedVocabularyReferenceFieldItemListTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests that properties or delta changes are reflected in the related field.
+   * Tests the remaining methods of writing data into a field.
    *
    * @covers ::onChange()
+   * @covers ::appendItem()
+   * @covers ::removeItem()
+   * @covers ::filter()
    */
-  public function testOnChange(): void {
+  public function testValueWritingAlternatives(): void {
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
     $entity = EntityTest::create();
 
-    // Single property change.
-    $entity->get('association_one_23fd58145b')->target_id = 1;
+    // Append an item.
+    $entity->get('association_one_23fd58145b')->appendItem(1);
     $this->assertEquals([
       [
+        'target_association_id' => 'test_vocabulary.association_one',
         'target_id' => 1,
       ],
-    ], $entity->get('association_one_23fd58145b')->getValue());
+    ], $entity->get('field_one')->getValue());
 
-    // Specific item value change.
-    $entity->get('association_one_23fd58145b')->set(1, 2);
+    // Change directly a property. This is covered by the ::onChange() method.
+    $entity->get('association_one_23fd58145b')->target_id = 2;
     $this->assertEquals([
       [
-        'target_id' => 1,
-      ],
-      [
+        'target_association_id' => 'test_vocabulary.association_one',
         'target_id' => 2,
       ],
-    ], $entity->get('association_one_23fd58145b')->getValue());
+    ], $entity->get('field_one')->getValue());
+
+    // Similar to the previous test.
+    $entity->get('association_one_23fd58145b')->get(0)->target_id = 3;
+    $this->assertEquals([
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 3,
+      ],
+    ], $entity->get('field_one')->getValue());
+
+    // Changing a specific item value is also covered by ::onChange().
+    $entity->get('association_one_23fd58145b')->get(0)->setValue(4);
+    $this->assertEquals([
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 4,
+      ],
+    ], $entity->get('field_one')->getValue());
+
+    // Set an item with a specific delta. Still covered by ::onChange().
+    $entity->get('association_one_23fd58145b')->set(1, 5);
+    $this->assertEquals([
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 4,
+      ],
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 5,
+      ],
+    ], $entity->get('field_one')->getValue());
+
+    $entity->get('association_one_23fd58145b')->removeItem(0);
+    $this->assertEquals([
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 5,
+      ],
+    ], $entity->get('field_one')->getValue());
+
+    unset($entity->get('association_one_23fd58145b')->get(0)->entity);
+    $this->assertEquals([
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => NULL,
+      ],
+    ], $entity->get('field_one')->getValue());
+
+    // Add some extra items.
+    $entity->get('association_one_23fd58145b')->appendItem(6);
+    // Test that filtering updates the reference field values.
+    $entity->get('association_one_23fd58145b')->filterEmptyItems();
+    $this->assertEquals([
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 6,
+      ],
+    ], $entity->get('field_one')->getValue());
   }
 
 }
