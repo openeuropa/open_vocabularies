@@ -45,7 +45,7 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
    * {@inheritdoc}
    */
   public function onChange($delta) {
-    // Update all the values whenever a single item or propery is changed.
+    // Update all the values whenever a single item or property is changed.
     $this->updateVocabularyReferenceField($this->getValue());
 
     parent::onChange($delta);
