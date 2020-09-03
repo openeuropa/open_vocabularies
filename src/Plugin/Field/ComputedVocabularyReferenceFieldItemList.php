@@ -14,6 +14,8 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
 
   use ComputedItemListTrait {
     setValue as traitSetValue;
+    appendItem as traitAppendItem;
+    removeItem as traitRemoveItem;
   }
 
   /**
@@ -46,7 +48,7 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
    */
   public function onChange($delta) {
     // Update all the values whenever a single item or property is changed.
-    $this->updateVocabularyReferenceField($this->getValue());
+    $this->updateVocabularyReferenceField();
 
     parent::onChange($delta);
   }
@@ -57,16 +59,43 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
   public function setValue($values, $notify = TRUE) {
     $this->traitSetValue($values, $notify);
 
-    $this->updateVocabularyReferenceField($this->getValue());
+    $this->updateVocabularyReferenceField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function appendItem($value = NULL) {
+    $return = $this->traitAppendItem($value);
+    $this->updateVocabularyReferenceField();
+
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeItem($index) {
+    $return = $this->traitRemoveItem($index);
+    $this->updateVocabularyReferenceField();
+
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function filter($callback) {
+    $return = parent::filter($callback);
+    $this->updateVocabularyReferenceField();
+
+    return $return;
   }
 
   /**
    * Updates the values stored in the vocabulary reference field.
-   *
-   * @param array $values
-   *   The values to store.
    */
-  protected function updateVocabularyReferenceField(array $values): void {
+  protected function updateVocabularyReferenceField(): void {
     $association_id = $this->getSetting('open_vocabulary_association');
     $field_name = $this->getSetting('open_vocabulary_reference_field');
 
@@ -75,7 +104,7 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
     // Remove all the values belonging to this association, so we can re-append
     // them in the newly updated order.
     $item_list->filterValuesByTargetAssociation($association_id);
-    foreach ($values as $value) {
+    foreach ($this->getValue() as $value) {
       $value['target_association_id'] = $association_id;
       $item_list->appendItem($value);
     }
