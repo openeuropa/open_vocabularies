@@ -86,6 +86,9 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
    * {@inheritdoc}
    */
   public function filter($callback) {
+    // Make sure that the values have been computed. This function is invoked
+    // early when values are being prepared for forms.
+    $this->ensureComputedValue();
     $return = parent::filter($callback);
     $this->updateVocabularyReferenceField();
 
