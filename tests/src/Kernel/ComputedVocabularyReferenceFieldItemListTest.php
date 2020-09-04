@@ -238,7 +238,6 @@ class ComputedVocabularyReferenceFieldItemListTest extends FieldKernelTestBase {
    * @covers ::onChange()
    * @covers ::appendItem()
    * @covers ::removeItem()
-   * @covers ::filter()
    */
   public function testValueWritingAlternatives(): void {
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
@@ -308,15 +307,46 @@ class ComputedVocabularyReferenceFieldItemListTest extends FieldKernelTestBase {
         'target_id' => NULL,
       ],
     ], $entity->get('field_one')->getValue());
+  }
 
-    // Add some extra items.
-    $entity->get('association_one_23fd58145b')->appendItem(6);
-    // Test that filtering updates the reference field values.
-    $entity->get('association_one_23fd58145b')->filterEmptyItems();
+  /**
+   * Tests the filter method.
+   *
+   * @covers ::filter()
+   */
+  public function testFilter(): void {
+    /** @var \Drupal\entity_test\Entity\EntityTest $entity */
+    $entity = EntityTest::create();
+
+    // Fill the entity with some existing data.
+    $entity->set('field_one', [
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 7,
+      ],
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 2,
+      ],
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 9,
+      ],
+    ]);
+
+    // Apply the function to the elements. The values are first computed and
+    // then the filtering is applied.
+    $entity->get('association_one_23fd58145b')->filter(function ($item): bool {
+      return $item->target_id > 5;
+    });
     $this->assertEquals([
       [
         'target_association_id' => 'test_vocabulary.association_one',
-        'target_id' => 6,
+        'target_id' => 7,
+      ],
+      [
+        'target_association_id' => 'test_vocabulary.association_one',
+        'target_id' => 9,
       ],
     ], $entity->get('field_one')->getValue());
   }
