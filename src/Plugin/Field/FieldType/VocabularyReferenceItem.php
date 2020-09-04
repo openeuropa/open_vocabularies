@@ -55,10 +55,8 @@ class VocabularyReferenceItem extends FieldItemBase {
     if ($this->target_id !== NULL && $this->target_association_id !== NULL) {
       return FALSE;
     }
-    // @todo reinstate after the property is set in place.
-    // if ($this->entity && $this->entity instanceof EntityInterface) {
-    //   return FALSE;
-    // }
+    // @todo reinstate check on entity after the property is set in place.
+    // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
     return TRUE;
   }
 
@@ -76,9 +74,8 @@ class VocabularyReferenceItem extends FieldItemBase {
 
     // @todo Define the 'association entity' property, computed field.
     // @todo Define the 'target entity' property, computed field with custom
-    // class that loads the target entity after reading association > type
-    // config.
-
+    //   class that loads the target entity after reading association > type
+    //   config.
     return $properties;
   }
 
