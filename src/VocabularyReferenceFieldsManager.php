@@ -199,6 +199,7 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
       $fields[$field_name] = BaseFieldDefinition::create('entity_reference')
         ->setLabel($association->label())
         ->setDescription($association->getHelpText())
+        // @todo Allow users to decide if the reference can be translated.
         ->setTranslatable(FALSE)
         ->setRequired($association->isRequired())
         ->setCardinality($association->getCardinality())
