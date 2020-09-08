@@ -10,7 +10,6 @@ use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
-use Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @property \Drupal\open_vocabularies\OpenVocabularyAssociationInterface $entity
  */
 class OpenVocabularyAssociationForm extends EntityForm {
-
-  /**
-   * The reference handler plugin manager.
-   *
-   * @var \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface
-   */
-  protected $referenceHandlerManager;
 
   /**
    * The field widget plugin manager.
@@ -41,15 +33,12 @@ class OpenVocabularyAssociationForm extends EntityForm {
    *   The messenger service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
-   *   The reference handler plugin manager.
    * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
    *   The field widget plugin manager.
    */
-  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager, WidgetPluginManager $widgetManager) {
+  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, WidgetPluginManager $widgetManager) {
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
-    $this->referenceHandlerManager = $referenceHandlerManager;
     $this->widgetManager = $widgetManager;
   }
 
@@ -60,7 +49,6 @@ class OpenVocabularyAssociationForm extends EntityForm {
     return new static(
       $container->get('messenger'),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler'),
       $container->get('plugin.manager.field.widget')
     );
   }
