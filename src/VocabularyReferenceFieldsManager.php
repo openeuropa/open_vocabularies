@@ -184,10 +184,12 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
    *   An array of base field definitions.
    */
   protected function generateEntityReferenceFields(FieldDefinitionInterface $reference_field, EntityTypeInterface $entity_type, string $bundle): array {
+    /** @var \Drupal\open_vocabularies\OpenVocabularyAssociationStorageInterface $association_storage */
+    $association_storage = $this->entityTypeManager->getStorage('open_vocabulary_association');
     $vocabulary_storage = $this->entityTypeManager->getStorage('open_vocabulary');
     $fields = [];
 
-    $associations = $this->loadAssociationsByField($reference_field->id());
+    $associations = $association_storage->loadAssociationsByField($reference_field->id());
     foreach ($associations as $association) {
       /** @var \Drupal\open_vocabularies\OpenVocabularyInterface $vocabulary */
       $vocabulary = $vocabulary_storage->load($association->getVocabulary());
@@ -223,29 +225,6 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
     }
 
     return $fields;
-  }
-
-  /**
-   * Loads association entities that are related to a specific field.
-   *
-   * @param string $field_id
-   *   The field ID.
-   *
-   * @return \Drupal\open_vocabularies\OpenVocabularyAssociationInterface[]
-   *   The loaded associations, ordered by weight.
-   */
-  protected function loadAssociationsByField(string $field_id): array {
-    $storage = $this->entityTypeManager->getStorage('open_vocabulary_association');
-    $query = $storage->getQuery();
-    $query->condition('fields.*', $field_id);
-    $query->sort('weight');
-    $results = $query->execute();
-
-    if (empty($results)) {
-      return [];
-    }
-
-    return $storage->loadMultiple($results);
   }
 
 }

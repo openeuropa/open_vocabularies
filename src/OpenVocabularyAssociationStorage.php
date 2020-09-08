@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Storage handler for the Open Vocabulary Association entities.
  */
-class OpenVocabularyAssociationStorage extends ConfigEntityStorage {
+class OpenVocabularyAssociationStorage extends ConfigEntityStorage implements OpenVocabularyAssociationStorageInterface {
 
   /**
    * The entity field manager.
@@ -63,9 +63,28 @@ class OpenVocabularyAssociationStorage extends ConfigEntityStorage {
   }
 
   /**
-   * Returns the next vocabulary association weight.
+   * {@inheritdoc}
    */
-  public function getNextVocabularyAssociationWeight(): int {
+  public function loadAssociationsByField(string $field_id): array {
+    $query = $this->getQuery();
+    $query->condition('fields.*', $field_id);
+    $query->sort('weight');
+    $results = $query->execute();
+
+    if (empty($results)) {
+      return [];
+    }
+
+    return $this->loadMultiple($results);
+  }
+
+  /**
+   * Returns the next vocabulary association weight.
+   *
+   * @return int
+   *   The next weight value.
+   */
+  protected function getNextVocabularyAssociationWeight(): int {
     $vocabulary_associations = $this->getSortedItems();
     if (empty($vocabulary_associations)) {
       return 0;
@@ -85,7 +104,7 @@ class OpenVocabularyAssociationStorage extends ConfigEntityStorage {
    * @return \Drupal\open_vocabularies\OpenVocabularyAssociationInterface[]
    *   The sorted vocabulary associations.
    */
-  public function getSortedItems(): array {
+  protected function getSortedItems(): array {
     /** @var \Drupal\open_vocabularies\OpenVocabularyAssociationInterface[] $vocabulary_associations */
     $vocabulary_associations = $this->loadMultiple();
 
