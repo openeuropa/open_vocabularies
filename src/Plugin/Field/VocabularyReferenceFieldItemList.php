@@ -14,7 +14,7 @@ class VocabularyReferenceFieldItemList extends FieldItemList implements Vocabula
   /**
    * {@inheritdoc}
    */
-  public function filterValuesByTargetAssociation(string $association_id): VocabularyReferenceFieldItemListInterface {
+  public function filterTargetAssociationItems(string $association_id): VocabularyReferenceFieldItemListInterface {
     $this->filter(function ($item) use ($association_id): bool {
       return $item->target_association_id !== $association_id;
     });

@@ -19,6 +19,6 @@ interface VocabularyReferenceFieldItemListInterface extends FieldItemListInterfa
    *
    * @return $this
    */
-  public function filterValuesByTargetAssociation(string $association_id): VocabularyReferenceFieldItemListInterface;
+  public function filterTargetAssociationItems(string $association_id): VocabularyReferenceFieldItemListInterface;
 
 }

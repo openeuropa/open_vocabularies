@@ -106,7 +106,7 @@ class ComputedVocabularyReferenceFieldItemList extends EntityReferenceFieldItemL
     $item_list = $this->getEntity()->get($field_name);
     // Remove all the values belonging to this association, so we can re-append
     // them in the newly updated order.
-    $item_list->filterValuesByTargetAssociation($association_id);
+    $item_list->filterTargetAssociationItems($association_id);
     foreach ($this->getValue() as $value) {
       $value['target_association_id'] = $association_id;
       $item_list->appendItem($value);

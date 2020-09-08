@@ -46,9 +46,9 @@ class VocabularyReferenceFieldItemListTest extends FieldKernelTestBase {
   /**
    * Tests the method to filter values by association ID.
    *
-   * @covers ::filterValuesByTargetAssociation()
+   * @covers ::filterTargetAssociationItems()
    */
-  public function testFilterValuesByTargetAssociation(): void {
+  public function testFilterTargetAssociationItems(): void {
     // Generate 2 association IDs. We don't need real association entities as
     // only the ID is compared in the method.
     $id_to_filter = strtolower($this->randomMachineName());
@@ -73,7 +73,7 @@ class VocabularyReferenceFieldItemListTest extends FieldKernelTestBase {
       ],
     ]);
 
-    $entity->get('field_test')->filterValuesByTargetAssociation($id_to_filter);
+    $entity->get('field_test')->filterTargetAssociationItems($id_to_filter);
     // Items have been re-keyed upon removal.
     $this->assertEquals([
       [
