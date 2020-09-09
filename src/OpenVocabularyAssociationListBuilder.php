@@ -27,13 +27,6 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
   protected $entityTypeManager;
 
   /**
-   * The vocabulary reference handler plugin manager.
-   *
-   * @var \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface
-   */
-  protected $handlerManager;
-
-  /**
    * The field widget manager.
    *
    * @var \Drupal\Core\Field\WidgetPluginManager
@@ -49,17 +42,14 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
-   *   The reference handler plugin manager.
    * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
    *   The field widget manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager, WidgetPluginManager $widgetManager, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entityTypeManager, WidgetPluginManager $widgetManager, MessengerInterface $messenger) {
     parent::__construct($entity_type, $storage);
     $this->entityTypeManager = $entityTypeManager;
-    $this->handlerManager = $referenceHandlerManager;
     $this->widgetManager = $widgetManager;
     $this->messenger = $messenger;
   }
@@ -72,7 +62,6 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler'),
       $container->get('plugin.manager.field.widget'),
       $container->get('messenger')
     );
