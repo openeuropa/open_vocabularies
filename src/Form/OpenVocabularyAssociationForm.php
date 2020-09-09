@@ -6,10 +6,10 @@ namespace Drupal\open_vocabularies\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
-use Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,11 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class OpenVocabularyAssociationForm extends EntityForm {
 
   /**
-   * The reference handler plugin manager.
+   * The field widget plugin manager.
    *
-   * @var \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface
+   * @var \Drupal\Core\Field\WidgetPluginManager
    */
-  protected $referenceHandlerManager;
+  protected $widgetManager;
 
   /**
    * Instantiates a new instance of the form.
@@ -33,13 +33,13 @@ class OpenVocabularyAssociationForm extends EntityForm {
    *   The messenger service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
-   *   The reference handler plugin manager.
+   * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
+   *   The field widget plugin manager.
    */
-  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager) {
+  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, WidgetPluginManager $widgetManager) {
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
-    $this->referenceHandlerManager = $referenceHandlerManager;
+    $this->widgetManager = $widgetManager;
   }
 
   /**
@@ -49,7 +49,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
     return new static(
       $container->get('messenger'),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler')
+      $container->get('plugin.manager.field.widget')
     );
   }
 
@@ -85,17 +85,14 @@ class OpenVocabularyAssociationForm extends EntityForm {
       '#multiple' => TRUE,
       '#options' => $this->getAvailableFields(),
       '#default_value' => $entity->getFields(),
-      // @todo make required once we have the field type.
-      '#required' => FALSE,
+      '#required' => TRUE,
       '#disabled' => !$entity->isNew(),
     ];
 
-    // @todo change this to the widget handlers.
-    $widgets = $this->referenceHandlerManager->getDefinitionsAsOptions();
     $form['widget_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Widget type'),
-      '#options' => $widgets,
+      '#options' => $this->widgetManager->getOptions('entity_reference'),
       '#default_value' => $entity->getWidgetType(),
       '#required' => TRUE,
     ];
@@ -210,6 +207,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
       : $this->t('Updated vocabulary association %label.', $message_args);
     $this->messenger->addStatus($message);
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+
     return $result;
   }
 
@@ -239,14 +237,17 @@ class OpenVocabularyAssociationForm extends EntityForm {
   /**
    * Returns the available field types to use for the association.
    *
+   * @todo Fix this method:
+   *   - do not rely on field config to find the fields;
+   *   - generate properly the option labels.
+   *
    * @return array
    *   The field type names in select option format.
    */
   protected function getAvailableFields(): array {
     $storage = $this->entityTypeManager->getStorage('field_config');
     $query = $storage->getQuery();
-    // @todo create field type.
-    $query->condition('field_type', 'open_vocabularies_field');
+    $query->condition('field_type', 'open_vocabulary_reference');
     $results = $query->execute();
 
     $fields = [];

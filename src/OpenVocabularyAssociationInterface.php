@@ -25,7 +25,7 @@ interface OpenVocabularyAssociationInterface extends ConfigEntityInterface {
   public function getName(): ?string;
 
   /**
-   * Returns the field names to which the association is made.
+   * Returns the field instance IDs to which the association is made.
    *
    * @return array
    *   The fields.

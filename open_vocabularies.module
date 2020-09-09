@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the Open vocabularies module.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\open_vocabularies\VocabularyReferenceFieldsManager;
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function open_vocabularies_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(VocabularyReferenceFieldsManager::class)
+    ->entityBundleFieldInfoAlter($fields, $entity_type, $bundle);
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function open_vocabularies_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(VocabularyReferenceFieldsManager::class)
+    ->entityFormDisplayAlter($form_display, $context);
+}

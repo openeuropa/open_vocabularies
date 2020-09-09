@@ -4,10 +4,9 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\Functional;
 
-use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
-use Drupal\open_vocabularies\OpenVocabularyInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
 
 /**
  * Tests the administration functionality regarding open vocabulary entities.
@@ -15,6 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group open_vocabularies
  */
 class OpenVocabularyAdminTest extends BrowserTestBase {
+
+  use VocabularyCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -33,7 +34,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
    * Tests the vocabulary route access.
    */
   public function testVocabularyRouteAccess(): void {
-    $vocabulary = $this->createTestVocabulary();
+    $vocabulary = $this->createVocabulary();
     $urls = [
       $vocabulary->toUrl('collection'),
       $vocabulary->toUrl('add-form'),
@@ -60,21 +61,8 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
    * Tests the vocabulary association route access.
    */
   public function testVocabularyAssociationRouteAccess(): void {
-    $vocabulary = $this->createTestVocabulary();
-    $values = [
-      'label' => $this->randomString(),
-      'vocabulary' => $vocabulary->id(),
-      'name' => strtolower($this->randomMachineName()),
-      // @todo change after using widget.
-      'widget_type' => 'test_entity_plugin',
-      'required' => TRUE,
-      'help_text' => 'Some text',
-      'predicate' => 'http://example.com/#name',
-      'cardinality' => 5,
-    ];
-
-    $association = OpenVocabularyAssociation::create($values);
-    $association->save();
+    $vocabulary = $this->createVocabulary();
+    $association = $this->createVocabularyAssociation($vocabulary->id());
 
     $urls = [
       $association->toUrl('collection'),
@@ -126,7 +114,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     }
 
     // Create a vocabulary.
-    $vocabulary = $this->createTestVocabulary();
+    $vocabulary = $this->createVocabulary();
 
     $this->drupalGet('/admin/structure/open-vocabulary');
     $this->assertSession()->pageTextNotContains('There are no vocabularies yet.');
@@ -172,7 +160,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     }
 
     // Create a vocabulary.
-    $vocabulary = $this->createTestVocabulary();
+    $vocabulary = $this->createVocabulary();
 
     // Create 2 vocabulary associations.
     $associations = [];
@@ -180,7 +168,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
       'label' => 'Association 0',
       'vocabulary' => $vocabulary->id(),
       'name' => 'association_0',
-      'widget_type' => 'test_alter_hook',
+      'widget_type' => 'options_select',
     ];
     $association = OpenVocabularyAssociation::create($values);
     $association->save();
@@ -202,7 +190,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
       $cells = $rows[$row]->findAll('xpath', '/td');
       $this->assertEquals($label, $cells[0]->getText());
       $this->assertEquals('association_' . $row, $cells[1]->getText());
-      $this->assertEquals('Tests the info alter hook', $cells[2]->getText());
+      $this->assertEquals('Select list', $cells[2]->getText());
       $this->assertEquals($vocabulary->label(), $cells[3]->getText());
       // Assert the weight value which in the beginning is the same as the row
       // number.
@@ -222,30 +210,6 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
       $cells = $rows[$row]->findAll('xpath', '/td');
       $this->assertEquals($label, $cells[0]->getText());
     }
-  }
-
-  /**
-   * Creates and returns a test Open Vocabulary entity.
-   *
-   * @return \Drupal\open_vocabularies\OpenVocabularyInterface
-   *   The vocabulary.
-   */
-  protected function createTestVocabulary(): OpenVocabularyInterface {
-    $values = [
-      'id' => strtolower($this->randomMachineName()),
-      'label' => $this->randomString(),
-      'description' => $this->randomString(128),
-      'handler' => 'test_entity_plugin',
-      'handler_settings' => [
-        'target_bundles' => [
-          'entity_test' => 'entity_test',
-        ],
-      ],
-    ];
-    $vocabulary = OpenVocabulary::create($values);
-    $vocabulary->save();
-
-    return $vocabulary;
   }
 
 }

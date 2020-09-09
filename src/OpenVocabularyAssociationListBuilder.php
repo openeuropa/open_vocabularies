@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,11 +27,11 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
   protected $entityTypeManager;
 
   /**
-   * The vocabulary reference handler plugin manager.
+   * The field widget manager.
    *
-   * @var \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface
+   * @var \Drupal\Core\Field\WidgetPluginManager
    */
-  protected $handlerManager;
+  protected $widgetManager;
 
   /**
    * Constructs a new OpenVocabularyAssociationListBuilder object.
@@ -41,15 +42,15 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager
-   *   The reference handler plugin manager.
+   * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
+   *   The field widget manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entityTypeManager, VocabularyReferenceHandlerPluginManagerInterface $referenceHandlerManager, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entityTypeManager, WidgetPluginManager $widgetManager, MessengerInterface $messenger) {
     parent::__construct($entity_type, $storage);
     $this->entityTypeManager = $entityTypeManager;
-    $this->handlerManager = $referenceHandlerManager;
+    $this->widgetManager = $widgetManager;
     $this->messenger = $messenger;
   }
 
@@ -61,7 +62,7 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.open_vocabularies.vocabulary_reference_handler'),
+      $container->get('plugin.manager.field.widget'),
       $container->get('messenger')
     );
   }
@@ -93,7 +94,7 @@ class OpenVocabularyAssociationListBuilder extends DraggableListBuilder {
     $row['name'] = [
       '#markup' => $entity->getName(),
     ];
-    $widget_type_definition = $this->handlerManager->getDefinition($entity->getWidgetType());
+    $widget_type_definition = $this->widgetManager->getDefinition($entity->getWidgetType());
     $row['widget_type'] = [
       '#markup' => $widget_type_definition['label'],
     ];
