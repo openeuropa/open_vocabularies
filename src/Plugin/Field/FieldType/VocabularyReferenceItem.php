@@ -17,7 +17,8 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
  *   category = @Translation("Open vocabulary"),
  *   default_widget = "open_vocabulary_reference_widget",
  *   default_formatter = "string",
- *   list_class = "\Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList"
+ *   list_class = "\Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList",
+ *   cardinality = \Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
  * )
  */
 class VocabularyReferenceItem extends FieldItemBase {
