@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\Functional;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
@@ -56,7 +55,6 @@ class VocabularyReferenceFieldTest extends BrowserTestBase {
       'field_name' => 'vocabulary_reference',
       'entity_type' => 'node',
       'type' => 'open_vocabulary_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ]);
     $storage->save();
     FieldConfig::create([
