@@ -297,6 +297,19 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'target_entity_type_id' => 'entity_test_with_bundle',
       'target_bundle' => 'bundle_b',
     ], $definitions['association_two_94ab077978']);
+
+    // Delete the second association and verify that the related definitions
+    // have been deleted..
+    $association_two->delete();
+
+    $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_a');
+    $this->assertEquals([
+      'association_one_94ab077978',
+      'association_one_1c8d2512e6',
+    ], array_keys(array_diff_key($definitions, $existing_definitions['bundle_a'])));
+
+    $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_b');
+    $this->assertEquals(array_keys($existing_definitions['bundle_b']), array_keys($definitions));
   }
 
   /**
