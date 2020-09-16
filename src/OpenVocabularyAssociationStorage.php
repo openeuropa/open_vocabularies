@@ -138,4 +138,13 @@ class OpenVocabularyAssociationStorage extends ConfigEntityStorage implements Op
     $this->entityFieldManager->clearCachedFieldDefinitions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function doDelete($entities) {
+    parent::doDelete($entities);
+
+    $this->entityFieldManager->clearCachedFieldDefinitions();
+  }
+
 }
