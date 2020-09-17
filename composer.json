@@ -11,6 +11,7 @@
     },
     "require-dev": {
         "composer/installers": "~1.5",
+        "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "~2.2",
         "drupal/config_devel": "~1.2",
         "drupal/drupal-extension": "~4.0",
@@ -50,6 +51,11 @@
             "build/profiles/contrib/{$name}": ["type:drupal-profile"],
             "build/modules/contrib/{$name}": ["type:drupal-module"],
             "build/themes/contrib/{$name}": ["type:drupal-theme"]
+        },
+        "patches": {
+            "drupal/core": {
+                "Entity display entities are incorrectly unserialized @see https://www.drupal.org/project/drupal/issues/3171333": "https://www.drupal.org/files/issues/2020-09-17/3171333-6.patch"
+            }
         }
     },
     "config": {

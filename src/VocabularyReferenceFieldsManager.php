@@ -6,7 +6,6 @@ namespace Drupal\open_vocabularies;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -123,13 +122,6 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
     }
 
     if (!empty($fields_to_hide)) {
-      // Changes to the form display were made, so mark it as custom.
-      // This will prevent re-initialisation when the entity is being hydrated
-      // from cache. The form display is stored in the form cache in
-      // \Drupal\Core\Entity\ContentEntityForm::init().
-      // @see \Drupal\Core\Entity\EntityDisplayBase::__wakeup()
-      $form_display->set('mode', EntityDisplayBase::CUSTOM_MODE);
-
       // Hide all the vocabulary reference widgets from the display.
       foreach (array_keys($fields_to_hide) as $field_name) {
         $form_display->removeComponent($field_name);
