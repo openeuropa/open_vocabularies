@@ -82,24 +82,12 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
   public function entityFormDisplayAlter(EntityFormDisplayInterface $form_display, array $context): void {
     $association_storage = $this->entityTypeManager->getStorage('open_vocabulary_association');
 
-    $fields = $this->entityFieldManager->getFieldDefinitions($form_display->getTargetEntityTypeId(), $form_display->getTargetBundle());
+    $fields = $this->getComputedVocabularyReferenceFields($form_display->getTargetEntityTypeId(), $form_display->getTargetBundle());
     $fields_to_hide = [];
     foreach ($fields as $field_name => $definition) {
-      // Filter out fields that are not entity references provided by this
-      // module as base fields.
-      if (!$definition instanceof BaseFieldDefinition || $definition->getProvider() !== 'open_vocabularies' || $definition->getType() !== 'entity_reference') {
-        continue;
-      }
-
-      $reference_field_name = $definition->getSetting('open_vocabulary_reference_field');
-      // Run an additional check to make sure that this is an entity reference
-      // pointing to a vocabulary reference field.
-      if ($reference_field_name === NULL) {
-        continue;
-      }
-
       // Check if the vocabulary reference field had its widget placed in this
       // form display.
+      $reference_field_name = $definition->getSetting('open_vocabulary_reference_field');
       $reference_display_data = $form_display->getComponent($reference_field_name);
       if ($reference_display_data === NULL) {
         continue;
@@ -217,6 +205,41 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
     }
 
     return $fields;
+  }
+
+  /**
+   * Returns all the computed vocabulary reference fields of a specific bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle ID.
+   *
+   * @return array
+   *   The array of computed field definitions.
+   *
+   * @see entityBundleFieldInfoAlter()
+   */
+  protected function getComputedVocabularyReferenceFields(string $entity_type_id, string $bundle): array {
+    $computed_fields = [];
+    foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle) as $field_name => $definition) {
+      // Filter out fields that are not entity references provided by this
+      // module as base fields.
+      if (!$definition instanceof BaseFieldDefinition || $definition->getProvider() !== 'open_vocabularies' || $definition->getType() !== 'entity_reference') {
+        continue;
+      }
+
+      $reference_field_name = $definition->getSetting('open_vocabulary_reference_field');
+      // Run an additional check to make sure that this is an entity reference
+      // pointing to a vocabulary reference field.
+      if ($reference_field_name === NULL) {
+        continue;
+      }
+
+      $computed_fields[$field_name] = $definition;
+    }
+
+    return $computed_fields;
   }
 
 }
