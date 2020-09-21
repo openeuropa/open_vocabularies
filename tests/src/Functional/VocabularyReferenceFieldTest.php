@@ -135,7 +135,7 @@ class VocabularyReferenceFieldTest extends BrowserTestBase {
     $assert_session->fieldExists('fields[vocabulary_reference][weight]')->setValue(-4);
     $assert_session->fieldExists('fields[responsible][weight]')->setValue(-3);
     // Make sure that a consistent widget is used.
-    $assert_session->fieldExists('fields[responsible][type]')->setValue('options_buttons');
+    $assert_session->fieldExists('fields[responsible][type]')->setValue('options_select');
     $this->getSession()->getPage()->pressButton('Save');
 
     $row = $assert_session->elementExists('xpath', '//table/tbody/tr[./td[1][text()="Vocabularies"]]');
@@ -170,7 +170,7 @@ class VocabularyReferenceFieldTest extends BrowserTestBase {
       // The next sibling is the wrapper of the responsible person field.
       . '/following-sibling::div)[1]'
       . '[@class and contains(concat(" ", normalize-space(@class), " "), " field--type-entity-reference ")]'
-      . '[.//legend/span[text()="Responsible person"]]';
+      . '[.//label[text()="Responsible person"]]';
     $assert_session->elementExists('xpath', $xpath);
 
     $this->assertEquals([
