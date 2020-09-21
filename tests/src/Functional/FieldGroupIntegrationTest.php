@@ -108,9 +108,9 @@ class FieldGroupIntegrationTest extends OpenVocabularyTestBase {
     $assert_session->fieldExists('Responsible person', $fieldset_foo);
 
     // The fields show correctly inside the "bar" group.
-    $fieldset_bar = $assert_session->elementExists('named', ['fieldset', 'Group foo']);
-    $assert_session->fieldNotExists('Participating countries', $fieldset_bar);
-    $assert_session->fieldNotExists('Hosting country', $fieldset_bar);
+    $fieldset_bar = $assert_session->elementExists('named', ['fieldset', 'Group bar']);
+    $assert_session->fieldExists('Participating countries', $fieldset_bar);
+    $assert_session->fieldExists('Hosting country', $fieldset_bar);
   }
 
 }
