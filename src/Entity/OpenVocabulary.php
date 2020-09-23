@@ -25,7 +25,7 @@ use Drupal\open_vocabularies\OpenVocabularyInterface;
  *     "form" = {
  *       "add" = "Drupal\open_vocabularies\Form\OpenVocabularyForm",
  *       "edit" = "Drupal\open_vocabularies\Form\OpenVocabularyForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
+ *       "delete" = "Drupal\open_vocabularies\Form\OpenVocabularyDeleteForm"
  *     }
  *   },
  *   config_prefix = "open_vocabulary",
