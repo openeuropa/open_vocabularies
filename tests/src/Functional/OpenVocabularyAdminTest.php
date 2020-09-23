@@ -101,4 +101,63 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $vocabulary->toUrl('delete-form')->toString() . '")]', $cells[4]);
   }
 
+  /**
+   * Tests the delete form.
+   */
+  public function testForm(): void {
+    $countries = $this->createVocabulary([
+      'label' => 'Countries',
+    ]);
+    $languages = $this->createVocabulary([
+      'label' => 'Languages',
+    ]);
+
+    // Create some associations for the languages vocabulary.
+    $association_one = $this->createVocabularyAssociation($languages->id(), [
+      'label' => 'Translations',
+      'name' => 'document_translations',
+    ]);
+    $association_two = $this->createVocabularyAssociation($languages->id(), [
+      'label' => 'Original language',
+      'name' => 'orig_language',
+    ]);
+
+    // Log in as a user with the administration permission.
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer open vocabularies',
+    ]));
+
+    // The country vocabulary has no associations so the normal form behaviour
+    // will be applied.
+    $assert_session = $this->assertSession();
+    $this->drupalGet($countries->toUrl('delete-form'));
+    $assert_session->titleEquals('Are you sure you want to delete the vocabulary Countries? | Drupal');
+    $assert_session->pageTextContains('Are you sure you want to delete the vocabulary Countries?');
+    $assert_session->pageTextContains('This action cannot be undone.');
+    $assert_session->linkExists('Cancel');
+    $assert_session->buttonExists('Delete')->press();
+    $assert_session->pageTextContains('The vocabulary Countries has been deleted.');
+
+    // The languages vocabulary has two associations so the deletion is
+    // prevented.
+    $this->drupalGet($languages->toUrl('delete-form'));
+    $assert_session->titleEquals('Cannot delete the vocabulary Languages | Drupal');
+    $assert_session->pageTextContains('Languages vocabulary is used by one or more associations and it cannot be deleted.');
+    $assert_session->pageTextContains('Associations referencing this vocabulary:');
+    $assert_session->pageTextContains('Translations (document_translations)');
+    $assert_session->pageTextContains('Original language (orig_language)');
+    $assert_session->buttonNotExists('Delete');
+    $assert_session->linkExists('Cancel');
+    $this->getSession()->getPage()->clickLink('Cancel');
+    $this->assertUrl('admin/structure/open-vocabulary');
+
+    // Delete the associations and try again to delete the form.
+    $association_one->delete();
+    $association_two->delete();
+    $this->drupalGet($languages->toUrl('delete-form'));
+    $assert_session->pageTextContains('Are you sure you want to delete the vocabulary Languages?');
+    $assert_session->buttonExists('Delete')->press();
+    $assert_session->pageTextContains('The vocabulary Languages has been deleted.');
+  }
+
 }
