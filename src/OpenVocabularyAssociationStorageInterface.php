@@ -22,4 +22,15 @@ interface OpenVocabularyAssociationStorageInterface extends ConfigEntityStorageI
    */
   public function loadAssociationsByField(string $field_id): array;
 
+  /**
+   * Loads association entities that target a specific open vocabulary.
+   *
+   * @param string $vocabulary_id
+   *   The vocabulary ID.
+   *
+   * @return \Drupal\open_vocabularies\OpenVocabularyAssociationInterface[]
+   *   The loaded associations, ordered by weight.
+   */
+  public function loadAssociationsByVocabulary(string $vocabulary_id): array;
+
 }

@@ -79,6 +79,22 @@ class OpenVocabularyAssociationStorage extends ConfigEntityStorage implements Op
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function loadAssociationsByVocabulary(string $vocabulary_id): array {
+    $query = $this->getQuery();
+    $query->condition('vocabulary', $vocabulary_id);
+    $query->sort('weight');
+    $results = $query->execute();
+
+    if (empty($results)) {
+      return [];
+    }
+
+    return $this->loadMultiple($results);
+  }
+
+  /**
    * Returns the next vocabulary association weight.
    *
    * @return int
