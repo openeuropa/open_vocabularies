@@ -104,7 +104,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
   /**
    * Tests the delete form.
    */
-  public function testForm(): void {
+  public function testDeleteForm(): void {
     $countries = $this->createVocabulary([
       'label' => 'Countries',
     ]);
