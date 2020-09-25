@@ -17,12 +17,10 @@ class OpenVocabularyDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $association_storage = $this->entityTypeManager->getStorage('open_vocabulary_association');
-    $association_ids = $association_storage->getQuery()
-      ->condition('vocabulary', $this->entity->id())
-      ->execute();
+    $associations = $this->entityTypeManager->getStorage('open_vocabulary_association')
+      ->loadAssociationsByVocabulary($this->entity->id());
 
-    if (empty($association_ids)) {
+    if (empty($associations)) {
       return parent::buildForm($form, $form_state);
     }
 
@@ -38,7 +36,7 @@ class OpenVocabularyDeleteForm extends EntityDeleteForm {
     ];
 
     $items = [];
-    foreach ($association_storage->loadMultiple($association_ids) as $association) {
+    foreach ($associations as $association) {
       $items[] = [
         '#type' => 'inline_template',
         '#template' => '{{ label }} (<em>{{ name }}</em>)',
