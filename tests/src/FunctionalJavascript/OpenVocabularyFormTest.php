@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
+use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+
 /**
  * Tests the open vocabulary entity forms.
  *
@@ -11,10 +13,12 @@ namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
  */
 class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
+  use VocabularyCreationTrait;
+
   /**
-   * Tests the create, update and delete routes.
+   * Tests the create and update routes.
    */
-  public function testVocabularyCreationUpdateDeletion(): void {
+  public function testVocabularyCreationUpdate(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer open vocabularies',
       'access content',
@@ -43,11 +47,13 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->elementExists('named', ['fieldset', 'Entity Test label bundle']);
     $assert_session->checkboxNotChecked('Entity Test Bundle');
+    $assert_session->pageTextNotContains('Please note: this vocabulary is used by one or more associations');
 
     // Change the selected vocabulary type.
     $radio = $this->getSession()->getPage()->find('named', ['radio', 'Entity test with bundle']);
     $radio->click();
     $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextNotContains('Please note: this vocabulary is used by one or more associations');
     // Verify that the previous vocabulary reference handler form elements have
     // been replaced with the ones of the newly selected handler.
     $assert_session->elementNotExists('named', ['fieldset', 'Entity Test label bundle']);
@@ -101,6 +107,7 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldValueEquals('Label', 'Vocabulary 1');
     $assert_session->fieldValueEquals('Description', $description);
     $this->assertTrue($assert_session->elementExists('named', ['radio', 'Entity test with bundle'])->isChecked());
+    $assert_session->pageTextNotContains('Please note: this vocabulary is used by one or more associations');
     $assert_session->checkboxChecked('Alpha');
     $assert_session->checkboxNotChecked('Beta');
     $assert_session->fieldValueEquals('Sort by', 'id');
@@ -114,13 +121,16 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
 
-    // Tests the deletion form.
-    $assert_session->buttonExists('List additional actions')->press();
-    $this->clickLink('Delete');
-    $assert_session->pageTextContainsOnce('Are you sure you want to delete the vocabulary Vocabulary 1?');
-    $assert_session->linkExists('Cancel');
-    $assert_session->buttonExists('Delete')->press();
-    $assert_session->pageTextContains('Status message The vocabulary Vocabulary 1 has been deleted.');
+    // Create an association that targets this vocabulary.
+    $this->createVocabularyAssociation('vocabulary_1');
+
+    // Edit the vocabulary once more and check that the vocabulary type cannot
+    // be changed anymore and a message is present in the page.
+    $this->clickLink('Edit');
+    $assert_session->fieldDisabled('Test entities');
+    $assert_session->fieldDisabled('Tests the info alter hook');
+    $assert_session->fieldDisabled('Entity test with bundle');
+    $assert_session->pageTextContains('Please note: this vocabulary is used by one or more associations');
   }
 
 }
