@@ -109,6 +109,17 @@ class OpenVocabularyForm extends EntityForm {
       '#parents' => ['settings', 'handler_settings'],
     ];
 
+    // Not all of the handler settings are meant to be disabled, for example
+    // the sorting options or adding a bundle. Show a message to the user,
+    // warning them about the possible issues.
+    if ($has_associations) {
+      $form['handler_settings']['warning'] = [
+        '#prefix' => '<em>',
+        '#markup' => $this->t('<strong>Please note:</strong> this vocabulary is used by one or more associations. Changing the following settings can cause loss of data.'),
+        '#suffix' => '</em>',
+      ];
+    }
+
     if ($handler_id) {
       /** @var \Drupal\open_vocabularies\VocabularyReferenceHandlerInterface $vocabulary_handler */
       $vocabulary_handler = $this->referenceHandlerManager->createInstance($handler_id, $this->entity->getHandlerSettings());
