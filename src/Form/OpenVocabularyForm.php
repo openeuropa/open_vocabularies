@@ -84,6 +84,7 @@ class OpenVocabularyForm extends EntityForm {
     // Retrieve the handler value from the entity.
     $handler_id = $this->entity->getHandler();
 
+    $has_associations = $this->entityHasTargetingAssociations();
     $form['handler'] = [
       '#type' => 'radios',
       '#required' => TRUE,
@@ -94,8 +95,7 @@ class OpenVocabularyForm extends EntityForm {
         'callback' => [static::class, 'updateHandlerSettings'],
         'wrapper' => 'vocabulary-handler-settings-wrapper',
       ],
-      // @todo Avoid changing handler when there is an association targetting.
-      // '#disabled' => $this->entityHasTargettingAssociations(),
+      '#disabled' => $has_associations,
     ];
 
     $form['handler_settings'] = [
@@ -107,8 +107,6 @@ class OpenVocabularyForm extends EntityForm {
       // The selection handlers expect the form elements to be under a specific
       // array key.
       '#parents' => ['settings', 'handler_settings'],
-      // @todo Avoid changing handler when there is an association targetting.
-      // '#disabled' => $this->entityHasTargettingAssociations(),
     ];
 
     if ($handler_id) {
@@ -192,6 +190,21 @@ class OpenVocabularyForm extends EntityForm {
 
     $vocabulary_handler = $this->referenceHandlerManager->createInstance($handler_id);
     $vocabulary_handler->getHandler()->validateConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * Returns if any association entities are targeting the current vocabulary.
+   *
+   * @return bool
+   *   True if any association references this vocabulary, false otherwise.
+   */
+  protected function entityHasTargetingAssociations(): bool {
+    if ($this->entity->isNew()) {
+      return FALSE;
+    }
+
+    $association_storage = $this->entityTypeManager->getStorage('open_vocabulary_association');
+    return !empty($association_storage->loadAssociationsByVocabulary($this->entity->id()));
   }
 
 }
