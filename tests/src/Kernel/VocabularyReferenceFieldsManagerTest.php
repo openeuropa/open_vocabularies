@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\Tests\open_vocabularies\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTestBundle;
@@ -360,10 +359,6 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'name',
       'association_one_94ab077978',
     ], array_keys($render_form_display->getComponents()));
-
-    // Since changes in the form were done, the render form display has been
-    // marked as custom.
-    $this->assertEquals(EntityDisplayBase::CUSTOM_MODE, $render_form_display->getMode());
 
     // Verify that the field is using the correct widget specified in the
     // association. We use the subset assertion as the component has extra

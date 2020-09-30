@@ -160,7 +160,9 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     }
 
     // Create a vocabulary.
-    $vocabulary = $this->createVocabulary();
+    $vocabulary = $this->createVocabulary([
+      'label' => $this->randomMachineName(),
+    ]);
 
     // Create 2 vocabulary associations.
     $associations = [];

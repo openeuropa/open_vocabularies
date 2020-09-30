@@ -7,8 +7,10 @@
 
 declare(strict_types = 1);
 
+use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\open_vocabularies\VocabularyReferenceFieldsManager;
 
 /**
@@ -27,4 +29,30 @@ function open_vocabularies_entity_form_display_alter(EntityFormDisplayInterface 
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(VocabularyReferenceFieldsManager::class)
     ->entityFormDisplayAlter($form_display, $context);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function open_vocabularies_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Adds support for field_group module.
+  if (!\Drupal::moduleHandler()->moduleExists('field_group')) {
+    return;
+  }
+
+  // Check for the lookup array created by field_group_attach_groups().
+  if (!isset($form['#group_children'])) {
+    return;
+  }
+
+  // Verify that this is a content entity form, where our form display alter
+  // applies.
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof ContentEntityFormInterface) {
+    return;
+  }
+
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(VocabularyReferenceFieldsManager::class)
+    ->alterFieldGroups($form, $form_state);
 }
