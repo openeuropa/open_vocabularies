@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\Functional;
 
-use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
 
@@ -58,35 +57,6 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the vocabulary association route access.
-   */
-  public function testVocabularyAssociationRouteAccess(): void {
-    $vocabulary = $this->createVocabulary();
-    $association = $this->createVocabularyAssociation($vocabulary->id());
-
-    $urls = [
-      $association->toUrl('collection'),
-      $association->toUrl('add-form'),
-      $association->toUrl('edit-form'),
-      $association->toUrl('delete-form'),
-    ];
-
-    foreach ($urls as $url) {
-      $this->drupalGet($url);
-      $this->assertSession()->statusCodeEquals(403);
-    }
-
-    // Log in as a user with the administration permission.
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer open vocabulary associations',
-    ]));
-    foreach ($urls as $url) {
-      $this->drupalGet($url);
-      $this->assertSession()->statusCodeEquals(200);
-    }
-  }
-
-  /**
    * Tests the vocabulary list builder table.
    */
   public function testVocabularyListBuilder(): void {
@@ -132,86 +102,62 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the vocabulary association list builder table.
+   * Tests the delete form.
    */
-  public function testVocabularyAssociationListBuilder(): void {
-    // Log in as a user with the administration permission.
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer open vocabulary associations',
-    ]));
-
-    $this->drupalGet('/admin/structure/open-vocabulary-association');
-    $this->assertSession()->pageTextContainsOnce('There are no vocabulary associations yet.');
-
-    $table = $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
-    $headers = $table->findAll('xpath', '/thead/tr/th');
-    $this->assertCount(6, $headers);
-
-    $expected_headers = [
-      'Label',
-      'Machine name',
-      'Widget type',
-      'Vocabulary',
-      'Weight',
-      'Operations',
-    ];
-    foreach ($headers as $key => $header) {
-      $this->assertEquals($expected_headers[$key], $header->getText());
-    }
-
-    // Create a vocabulary.
-    $vocabulary = $this->createVocabulary([
-      'label' => $this->randomMachineName(),
+  public function testDeleteForm(): void {
+    $countries = $this->createVocabulary([
+      'label' => 'Countries',
+    ]);
+    $languages = $this->createVocabulary([
+      'label' => 'Languages',
     ]);
 
-    // Create 2 vocabulary associations.
-    $associations = [];
-    $values = [
-      'label' => 'Association 0',
-      'vocabulary' => $vocabulary->id(),
-      'name' => 'association_0',
-      'widget_type' => 'options_select',
-    ];
-    $association = OpenVocabularyAssociation::create($values);
-    $association->save();
-    $associations[] = $association;
+    // Create some associations for the languages vocabulary.
+    $association_one = $this->createVocabularyAssociation($languages->id(), [
+      'label' => 'Translations',
+      'name' => 'document_translations',
+    ]);
+    $association_two = $this->createVocabularyAssociation($languages->id(), [
+      'label' => 'Original language',
+      'name' => 'orig_language',
+    ]);
 
-    $values['label'] = 'Association 1';
-    $values['name'] = 'association_1';
-    $association = OpenVocabularyAssociation::create($values);
-    $association->save();
-    $associations[] = $association;
+    // Log in as a user with the administration permission.
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer open vocabularies',
+    ]));
 
-    $this->drupalGet('/admin/structure/open-vocabulary-association');
-    $this->assertSession()->pageTextNotContains('There are no vocabulary associations yet.');
-    $rows = $this->getSession()->getPage()->findAll('xpath', '//div[@class="layout-content"]//table/tbody/tr');
-    $this->assertCount(2, $rows);
+    // The country vocabulary has no associations so the normal form behaviour
+    // will be applied.
+    $assert_session = $this->assertSession();
+    $this->drupalGet($countries->toUrl('delete-form'));
+    $assert_session->titleEquals('Are you sure you want to delete the vocabulary Countries? | Drupal');
+    $assert_session->pageTextContains('Are you sure you want to delete the vocabulary Countries?');
+    $assert_session->pageTextContains('This action cannot be undone.');
+    $assert_session->linkExists('Cancel');
+    $assert_session->buttonExists('Delete')->press();
+    $assert_session->pageTextContains('The vocabulary Countries has been deleted.');
 
-    // Verify that the cells contain the correct data.
-    foreach (['Association 0', 'Association 1'] as $row => $label) {
-      $cells = $rows[$row]->findAll('xpath', '/td');
-      $this->assertEquals($label, $cells[0]->getText());
-      $this->assertEquals('association_' . $row, $cells[1]->getText());
-      $this->assertEquals('Select list', $cells[2]->getText());
-      $this->assertEquals($vocabulary->label(), $cells[3]->getText());
-      // Assert the weight value which in the beginning is the same as the row
-      // number.
-      $this->assertEquals($row, $this->getSession()->getPage()->findField('entities[' . $associations[$row]->id() . '][weight]')->getValue());
-      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('edit-form')->toString() . '")]', $cells[5]);
-      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('delete-form')->toString() . '")]', $cells[5]);
-    }
+    // The languages vocabulary has two associations so the deletion is
+    // prevented.
+    $this->drupalGet($languages->toUrl('delete-form'));
+    $assert_session->titleEquals('Cannot delete the vocabulary Languages | Drupal');
+    $assert_session->pageTextContains('Languages vocabulary is used by one or more associations and it cannot be deleted.');
+    $assert_session->pageTextContains('Associations referencing this vocabulary:');
+    $assert_session->pageTextContains('Translations (document_translations)');
+    $assert_session->pageTextContains('Original language (orig_language)');
+    $assert_session->buttonNotExists('Delete');
+    $assert_session->linkExists('Cancel');
+    $this->getSession()->getPage()->clickLink('Cancel');
+    $this->assertUrl('admin/structure/open-vocabulary');
 
-    // Re-order the associations and assert the order has changed.
-    $this->getSession()->getPage()->fillField('entities[' . $associations[0]->id() . '][weight]', 10);
-    $this->getSession()->getPage()->fillField('entities[' . $associations[1]->id() . '][weight]', 5);
-    $this->getSession()->getPage()->pressButton('Save');
-    $this->assertSession()->pageTextContains('The order of the vocabulary associations has been updated.');
-    $this->assertEquals(10, $this->getSession()->getPage()->findField('entities[' . $associations[0]->id() . '][weight]')->getValue());
-    $this->assertEquals(5, $this->getSession()->getPage()->findField('entities[' . $associations[1]->id() . '][weight]')->getValue());
-    foreach (['Association 1', 'Association 0'] as $row => $label) {
-      $cells = $rows[$row]->findAll('xpath', '/td');
-      $this->assertEquals($label, $cells[0]->getText());
-    }
+    // Delete the associations and try again to delete the form.
+    $association_one->delete();
+    $association_two->delete();
+    $this->drupalGet($languages->toUrl('delete-form'));
+    $assert_session->pageTextContains('Are you sure you want to delete the vocabulary Languages?');
+    $assert_session->buttonExists('Delete')->press();
+    $assert_session->pageTextContains('The vocabulary Languages has been deleted.');
   }
 
 }

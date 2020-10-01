@@ -66,4 +66,32 @@ class OpenVocabularyAssociationStorageTest extends KernelTestBase {
     $this->assertEquals([], $storage->loadAssociationsByField('entity_test.entity_test.not_existing'));
   }
 
+  /**
+   * Tests the method to load associations given a vocabulary ID.
+   *
+   * @covers ::loadAssociationsByVocabulary()
+   */
+  public function testLoadAssociationsByVocabulary(): void {
+    $vocabulary_one = $this->createVocabulary();
+    $vocabulary_two = $this->createVocabulary();
+    $one = $this->createVocabularyAssociation($vocabulary_one->id());
+    $two = $this->createVocabularyAssociation($vocabulary_two->id());
+    $three = $this->createVocabularyAssociation($vocabulary_one->id(), [
+      'weight' => -50,
+    ]);
+
+    $storage = $this->container->get('entity_type.manager')->getStorage('open_vocabulary_association');
+
+    $this->assertEquals([
+      $three->id() => $three,
+      $one->id() => $one,
+    ], $storage->loadAssociationsByVocabulary($vocabulary_one->id()));
+
+    $this->assertEquals([
+      $two->id() => $two,
+    ], $storage->loadAssociationsByVocabulary($vocabulary_two->id()));
+
+    $this->assertEquals([], $storage->loadAssociationsByVocabulary('vocabulary_not_existing'));
+  }
+
 }
