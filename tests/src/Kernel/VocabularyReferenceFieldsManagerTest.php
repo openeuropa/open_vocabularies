@@ -11,6 +11,7 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\open_vocabularies\Plugin\Field\ComputedVocabularyReferenceFieldItemList;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
@@ -290,6 +291,47 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'target_entity_type_id' => 'entity_test_with_bundle',
       'target_bundle' => 'bundle_b',
     ], $definitions['association_two_94ab077978']);
+
+    // Change the handler settings for the first vocabulary.
+    unset($vocabulary_one_handler_settings['target_bundles']['referencable_one']);
+    $vocabulary_one = OpenVocabulary::load('vocabulary_one');
+    $vocabulary_one->set('handler_settings', $vocabulary_one_handler_settings)->save();
+
+    // The related field definitions should be updated with the new settings.
+    $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_a');
+    $this->assertComputedFieldDefinition([
+      'label' => 'Association one',
+      'description' => 'Help text to serve as description.',
+      'required' => TRUE,
+      'cardinality' => OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED,
+      'settings' => [
+        'target_type' => 'entity_test_with_bundle',
+        'handler' => 'default',
+        'handler_settings' => $vocabulary_one_handler_settings,
+        'open_vocabulary_association' => $association_one->id(),
+        'open_vocabulary_reference_field' => 'multiple_bundles',
+      ],
+      'name' => 'association_one_94ab077978',
+      'target_entity_type_id' => 'entity_test_with_bundle',
+      'target_bundle' => 'bundle_a',
+    ], $definitions['association_one_94ab077978']);
+
+    $this->assertComputedFieldDefinition([
+      'label' => 'Association one',
+      'description' => 'Help text to serve as description.',
+      'required' => TRUE,
+      'cardinality' => OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED,
+      'settings' => [
+        'target_type' => 'entity_test_with_bundle',
+        'handler' => 'default',
+        'handler_settings' => $vocabulary_one_handler_settings,
+        'open_vocabulary_association' => $association_one->id(),
+        'open_vocabulary_reference_field' => 'only_bundle_a',
+      ],
+      'name' => 'association_one_1c8d2512e6',
+      'target_entity_type_id' => 'entity_test_with_bundle',
+      'target_bundle' => 'bundle_a',
+    ], $definitions['association_one_1c8d2512e6']);
 
     // Delete the second association and verify that the related definitions
     // have been deleted..
