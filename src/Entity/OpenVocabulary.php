@@ -26,7 +26,8 @@ use Drupal\open_vocabularies\OpenVocabularyInterface;
  *       "add" = "Drupal\open_vocabularies\Form\OpenVocabularyForm",
  *       "edit" = "Drupal\open_vocabularies\Form\OpenVocabularyForm",
  *       "delete" = "Drupal\open_vocabularies\Form\OpenVocabularyDeleteForm"
- *     }
+ *     },
+ *     "storage" = "Drupal\open_vocabularies\OpenVocabularyStorage"
  *   },
  *   config_prefix = "open_vocabulary",
  *   admin_permission = "administer open vocabularies",
