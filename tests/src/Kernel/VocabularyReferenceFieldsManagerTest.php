@@ -11,7 +11,6 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\open_vocabularies\Plugin\Field\ComputedVocabularyReferenceFieldItemList;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
@@ -123,10 +122,9 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
 
     // Create one association that maps to two fields on the same entity bundle.
     // This makes sure that different computed field names are generated.
-    $association_one = OpenVocabularyAssociation::create([
+    $association_one = $this->createVocabularyAssociation('vocabulary_one', [
       'label' => 'Association one',
       'name' => 'association_one',
-      'vocabulary' => 'vocabulary_one',
       'widget_type' => 'options_select',
       'required' => TRUE,
       'help_text' => 'Help text to serve as description.',
@@ -137,8 +135,6 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
         'entity_test_with_bundle.bundle_a.only_bundle_a',
       ],
     ]);
-    /** @var \Drupal\open_vocabularies\Entity\OpenVocabularyAssociation $association_one */
-    $association_one->save();
 
     // Create an association assigned to:
     // - a field present in two bundles: this makes sure that full ID qualifiers
@@ -146,12 +142,12 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
     // - a field that is mapped by an association already: this will make sure
     //   that all the associations related to a field are retrieved and
     //   processed.
-    $association_two = OpenVocabularyAssociation::create([
+    $association_two = $this->createVocabularyAssociation('vocabulary_two', [
       'label' => 'Association two',
       'name' => 'association_two',
-      'vocabulary' => 'vocabulary_two',
       'widget_type' => 'options_buttons',
       'required' => FALSE,
+      'help_text' => '',
       'predicate' => 'http://example.com/#about',
       'cardinality' => 1,
       'fields' => [
@@ -159,8 +155,6 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
         'entity_test_with_bundle.bundle_a.only_bundle_a',
       ],
     ]);
-    /** @var \Drupal\open_vocabularies\Entity\OpenVocabularyAssociation $association_two */
-    $association_two->save();
 
     // Prepare the expected handler settings for later usage.
     $vocabulary_one_handler_settings = [
