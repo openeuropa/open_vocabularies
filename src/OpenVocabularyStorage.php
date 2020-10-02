@@ -35,7 +35,7 @@ class OpenVocabularyStorage extends ConfigEntityStorage {
   protected $entityTypeManager;
 
   /**
-   * Constructs a OpenVocabularyStorage object.
+   * Constructs an OpenVocabularyStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
