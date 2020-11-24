@@ -108,8 +108,10 @@ class VocabularyReferenceItem extends FieldItemBase {
     if (!array_key_exists('target_association_id', $values) && array_key_exists('target_id', $values)) {
       throw new \InvalidArgumentException('No association provided.');
     }
-    elseif (array_key_exists('target_association_id', $values) && array_key_exists('target_id', $values)) {
+    if (array_key_exists('target_association_id', $values)) {
       $this->onChange('target_association_id', FALSE);
+    }
+    if (array_key_exists('target_id', $values)) {
       $this->onChange('target_id', FALSE);
     }
 
