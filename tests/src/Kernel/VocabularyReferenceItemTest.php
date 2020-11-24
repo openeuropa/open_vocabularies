@@ -60,6 +60,8 @@ class VocabularyReferenceItemTest extends FieldKernelTestBase {
     $this->assertEquals([
       'target_association_id',
       'target_id',
+      'entity',
+      'association',
     ], array_keys($entity->getFieldDefinition('field_test')->getFieldStorageDefinition()->getPropertyDefinitions()));
 
     // The field is empty by default.
