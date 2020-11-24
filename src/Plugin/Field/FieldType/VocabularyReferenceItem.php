@@ -55,13 +55,11 @@ class VocabularyReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
-    // Avoid loading the entity by first checking the 'target_id'.
+    // The item is not considered empty only when both targets are not null.
     if ($this->target_id !== NULL && $this->target_association_id !== NULL) {
       return FALSE;
     }
-    // @todo reinstate check on entity after the property is set in place.
-    // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
+
     return TRUE;
   }
 
