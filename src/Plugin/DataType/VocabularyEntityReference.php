@@ -31,9 +31,8 @@ class VocabularyEntityReference extends EntityReference {
         return $this->target;
       }
 
-      $entity_type_manager = \Drupal::entityTypeManager();
       // Load the vocabulary.
-      $vocabulary = $entity_type_manager->getStorage('open_vocabulary')
+      $vocabulary = \Drupal::entityTypeManager()->getStorage('open_vocabulary')
         ->load($association->getVocabulary());
       // If the vocabulary is not found, return null early.
       if (!isset($vocabulary)) {
