@@ -4,9 +4,13 @@ declare(strict_types = 1);
 
 namespace Drupal\open_vocabularies\Plugin\Field\FieldType;
 
+use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
+use Drupal\open_vocabularies\TypedData\VocabularyDataReferenceDefinition;
 
 /**
  * Defines the 'open_vocabulary_reference' field type.
@@ -51,13 +55,11 @@ class VocabularyReferenceItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
-    // Avoid loading the entity by first checking the 'target_id'.
+    // The item is not considered empty only when both targets are not null.
     if ($this->target_id !== NULL && $this->target_association_id !== NULL) {
       return FALSE;
     }
-    // @todo reinstate check on entity after the property is set in place.
-    // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::isEmpty()
+
     return TRUE;
   }
 
@@ -66,18 +68,80 @@ class VocabularyReferenceItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['target_association_id'] = DataReferenceTargetDefinition::create('string')
-      ->setLabel(t('Association config entity ID'))
+      ->setLabel(new TranslatableMarkup('Association config entity ID'))
       ->setRequired(TRUE);
 
     $properties['target_id'] = DataReferenceTargetDefinition::create('string')
-      ->setLabel(t('Target entity'))
+      ->setLabel(new TranslatableMarkup('Target entity'))
       ->setRequired(TRUE);
 
-    // @todo Define the 'association entity' property, computed field.
-    // @todo Define the 'target entity' property, computed field with custom
-    //   class that loads the target entity after reading association > type
-    //   config.
+    $properties['entity'] = VocabularyDataReferenceDefinition::create('entity')
+      ->setLabel(new TranslatableMarkup('Entity'))
+      ->setDescription(new TranslatableMarkup('The referenced entity'))
+      // The entity object is computed out of the entity ID.
+      ->setComputed(TRUE)
+      // Simplify code by not allowing to pass the entity property.
+      ->setReadOnly(TRUE);
+
+    $properties['association'] = DataReferenceDefinition::create('entity')
+      ->setLabel(new TranslatableMarkup('Vocabulary association'))
+      ->setDescription(new TranslatableMarkup('The vocabulary association entity'))
+      // The entity object is computed out of the association ID.
+      ->setComputed(TRUE)
+      // Simplify code by not allowing to pass the association property.
+      ->setReadOnly(TRUE)
+      ->setTargetDefinition(EntityDataDefinition::create('open_vocabulary_association'));
+
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE) {
+    if (isset($values) && !is_array($values)) {
+      throw new \InvalidArgumentException('Both association ID and target entity ID are required.');
+    }
+
+    parent::setValue($values, FALSE);
+
+    if (!array_key_exists('target_association_id', $values) && array_key_exists('target_id', $values)) {
+      throw new \InvalidArgumentException('No association provided.');
+    }
+
+    // Make sure computed properties are always updated correctly.
+    if (array_key_exists('target_association_id', $values)) {
+      $this->onChange('target_association_id', FALSE);
+    }
+    if (array_key_exists('target_id', $values)) {
+      $this->onChange('target_id', FALSE);
+    }
+
+    // Notify the parent if necessary.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->getName());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name, $notify = TRUE) {
+    if ($property_name === 'target_association_id') {
+      $this->writePropertyValue('association', $this->target_association_id);
+      // @todo reset $this->get('entity')->getTargetDefinition()->setEntityTypeId()?
+      //   since the possible target entity type is changed?
+      // @todo set again the entity property if target_id is defined, to sync
+      //   the status of the entity property?
+    }
+    elseif ($property_name === 'target_id') {
+      // Avoid errors from non-set entity type by setting it to empty string.
+      // @see \Drupal\Core\Entity\Plugin\DataType\EntityReference::setValue()
+      $this->get('entity')->getTargetDefinition()->setEntityTypeId('');
+      $this->writePropertyValue('entity', $this->target_id);
+    }
+
+    parent::onChange($property_name, $notify);
   }
 
 }
