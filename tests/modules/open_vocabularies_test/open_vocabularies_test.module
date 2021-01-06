@@ -7,9 +7,30 @@
 
 declare(strict_types = 1);
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+
 /**
  * Implements hook_vocabulary_reference_handler_info_alter().
  */
 function open_vocabularies_test_vocabulary_reference_handler_info_alter(array &$info) {
   $info['test_alter_hook']['definition_altered'] = TRUE;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * Adds a cache tag when the operation "view label" is being checked for access.
+ *
+ * @see \Drupal\Tests\open_vocabularies\Kernel\VocabularyReferenceFormatterTest::testLabelFormatter()
+ */
+function open_vocabularies_test_entity_test_with_bundle_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $result = AccessResult::neutral();
+
+  if ($operation === 'view label') {
+    $result->addCacheTags(['open_vocabularies_test_access_tag:' . $entity->id()]);
+  }
+
+  return $result;
 }
