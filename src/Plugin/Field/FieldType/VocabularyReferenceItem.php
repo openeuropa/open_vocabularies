@@ -20,7 +20,7 @@ use Drupal\open_vocabularies\TypedData\VocabularyDataReferenceDefinition;
  *   label = @Translation("Vocabulary reference"),
  *   category = @Translation("Open vocabulary"),
  *   default_widget = "open_vocabulary_reference_widget",
- *   default_formatter = "string",
+ *   default_formatter = "open_vocabulary_reference_label",
  *   list_class = "\Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList",
  *   cardinality = \Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
  * )
