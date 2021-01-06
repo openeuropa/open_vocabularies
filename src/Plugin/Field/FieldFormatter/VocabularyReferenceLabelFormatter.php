@@ -70,7 +70,6 @@ class VocabularyReferenceLabelFormatter extends VocabularyReferenceFormatterBase
         $items[] = $this->getEntityLabelRenderArray($entity);
       }
 
-      // @todo is the association translated?
       $association = $association_storage->load($association_id);
       $item_list = [
         '#theme' => 'item_list',
