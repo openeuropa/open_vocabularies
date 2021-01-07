@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the 'vocabulary reference label' formatter.
+ * Plugin implementation of the 'open_vocabulary_reference_label' formatter.
  *
  * @FieldFormatter(
  *   id = "open_vocabulary_reference_label",
