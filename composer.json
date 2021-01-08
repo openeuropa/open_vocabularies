@@ -12,7 +12,7 @@
     "require-dev": {
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
-        "drupal-composer/drupal-scaffold": "~2.2",
+        "drupal/core-composer-scaffold": "^8.8",
         "drupal/config_devel": "~1.2",
         "drupal/drupal-extension": "^4.1",
         "drupal/field_group": "^3.1",
@@ -56,6 +56,11 @@
         "patches": {
             "drupal/core": {
                 "Entity display entities are incorrectly unserialized @see https://www.drupal.org/project/drupal/issues/3171333": "https://www.drupal.org/files/issues/2020-09-17/3171333-6.patch"
+            }
+        },
+        "drupal-scaffold": {
+            "locations": {
+                "web-root": "./build"
             }
         }
     },
