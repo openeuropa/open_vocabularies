@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\open_vocabularies\Functional;
 
 /**
- * Tests the UI facing functionalities.
+ * Tests the vocabulary reference field UI functionalities.
  */
 class VocabularyReferenceFieldTest extends OpenVocabularyTestBase {
 
@@ -17,9 +17,9 @@ class VocabularyReferenceFieldTest extends OpenVocabularyTestBase {
   ];
 
   /**
-   * Tests the user facing parts.
+   * Tests the computed fields placement in entity forms.
    */
-  public function testUi(): void {
+  public function testFormPlacement(): void {
     $this->drupalLogin($this->createUser(['administer node form display']));
     $this->drupalGet('/admin/structure/types/manage/page/form-display');
 
@@ -78,7 +78,7 @@ class VocabularyReferenceFieldTest extends OpenVocabularyTestBase {
     ], array_values($this->getOptions('Hosting country')));
     $assert_session->selectExists('Hosting country')->selectOption('Lithuania');
 
-    // Add values in order to click trigger at least two AJAX requests.
+    // Add values in order to click trigger at least two requests.
     // This covers a bug occurring after the form display is hydrated from the
     // form state cache. The first form rebuild request has no cache set, so
     // we need the second one to replicate the bug.

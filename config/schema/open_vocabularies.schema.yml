@@ -58,3 +58,11 @@ open_vocabularies.open_vocabulary_association.*:
     weight:
       type: integer
       label: Weight
+
+field.formatter.settings.open_vocabulary_reference_label:
+  type: mapping
+  label: 'Open vocabulary label formatter settings'
+  mapping:
+    link:
+      type: boolean
+      label: 'Link label to the referenced entity'
