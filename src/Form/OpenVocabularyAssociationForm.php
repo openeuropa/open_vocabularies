@@ -176,9 +176,13 @@ class OpenVocabularyAssociationForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
-    // Save only the values of the fields, without keys.
     $fields = $form_state->getValue('fields', []);
-    $form_state->setValue('fields', array_values($fields));
+    // Save only the checked fields.
+    $fields = array_filter($fields);
+    // Ensure a consistent order of the fields, independent from the labels.
+    // This also drops all the keys.
+    sort($fields);
+    $form_state->setValue('fields', $fields);
 
     // Save the cardinality.
     if ($form_state->getValue('cardinality') === 'number' && $form_state->getValue('cardinality_number')) {
