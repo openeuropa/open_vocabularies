@@ -237,6 +237,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
    *   A list of field checkboxes, grouped by entity type.
    *
    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+   * @SuppressWarnings(PHPMD.NPathComplexity)
    */
   protected function getAvailableFields(): array {
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
@@ -248,27 +249,20 @@ class OpenVocabularyAssociationForm extends EntityForm {
     $entity_types = [];
     foreach ($field_manager->getFieldMapByFieldType('open_vocabulary_reference') as $entity_type_id => $map) {
       $entity_definition = $this->entityTypeManager->getDefinition($entity_type_id);
-      $bundle_info = $entity_type_bundle_info->getBundleInfo($entity_type_id);
 
       // Store the entity label separate so we can sort on them later.
       $entity_types[$entity_type_id] = $entity_definition->getLabel() ?: $entity_type_id;
 
+      // The field manager method returns the fields and on which bundles they
+      // appear. Reverse this by storing in each bundle which fields are
+      // present. This is needed to determine which label to use later on.
       foreach ($map as $field_name => $data) {
-        foreach ($data['bundles'] as $bundle_id) {
-          // Generate the unique identifier for the field.
-          $identifier = implode('.', [$entity_type_id, $bundle_id, $field_name]);
+        if (empty($data['bundles'])) {
+          continue;
+        }
 
-          // Since more than one field can be present on the same bundle,
-          // identify them by generating a label that uses bundle label and
-          // field name.
-          $definitions = $field_manager->getFieldDefinitions($entity_type_id, $bundle_id);
-          $field_label = $definitions[$field_name]->getLabel() ?: $field_name;
-          $bundle_label = $bundle_info[$bundle_id]['label'] ?: $bundle_id;
-          // Do not use translatable markup as there's nothing to translate.
-          $fields[$entity_type_id][$identifier] = new FormattableMarkup('@bundle (@field)', [
-            '@bundle' => $bundle_label,
-            '@field' => $field_label,
-          ]);
+        foreach ($data['bundles'] as $bundle_id) {
+          $fields[$entity_type_id][$bundle_id][] = $field_name;
         }
       }
     }
@@ -296,21 +290,44 @@ class OpenVocabularyAssociationForm extends EntityForm {
         ],
       ];
 
-      // Sort the fields by the label.
-      natcasesort($fields[$entity_type_id]);
-      foreach ($fields[$entity_type_id] as $identifier => $label) {
-        $checked = in_array($identifier, $this->entity->getFields());
+      foreach ($fields[$entity_type_id] as $bundle_id => $field_names) {
+        $bundle_info = $entity_type_bundle_info->getBundleInfo($entity_type_id);
+        $bundle_label = $bundle_info[$bundle_id]['label'] ?: $bundle_id;
+        $definitions = $field_manager->getFieldDefinitions($entity_type_id, $bundle_id);
+        $bundle_has_only_one_field = count($field_names) === 1;
 
-        $build['groups'][$entity_type_id][$identifier] = [
-          // Place all the checkboxes under the "fields" key so it's easier to
-          // retrieve values from the form state.
-          '#parents' => ['fields', $identifier],
-          '#type' => 'checkbox',
-          '#title' => $label,
-          '#return_value' => $identifier,
-          '#default_value' => $checked ? $identifier : NULL,
-          '#disabled' => !$this->entity->isNew() && $checked,
-        ];
+        foreach ($field_names as $field_name) {
+          // Generate the unique identifier for the field.
+          $identifier = implode('.', [$entity_type_id, $bundle_id, $field_name]);
+          $checked = in_array($identifier, $this->entity->getFields());
+
+          $field_label = $definitions[$field_name]->getLabel() ?: $field_name;
+          if ($bundle_has_only_one_field) {
+            $title = $bundle_label;
+          }
+          else {
+            // Since more than one field is present on the same bundle, identify
+            // them by generating a title that uses bundle and field label.
+            $title = new FormattableMarkup('@bundle (@field)', [
+              '@bundle' => $bundle_label,
+              '@field' => $field_label,
+            ]);
+          }
+
+          $build['groups'][$entity_type_id][$identifier] = [
+            // Place all the checkboxes under the "fields" key so it's easier to
+            // retrieve values from the form state.
+            '#parents' => ['fields', $identifier],
+            '#type' => 'checkbox',
+            '#title' => $title,
+            '#return_value' => $identifier,
+            '#default_value' => $checked ? $identifier : NULL,
+            '#disabled' => !$this->entity->isNew() && $checked,
+          ];
+        }
+
+        // Sort the checkboxes by their title.
+        uasort($build['groups'][$entity_type_id], ['\Drupal\Component\Utility\SortArray', 'sortByTitleProperty']);
       }
     }
 
