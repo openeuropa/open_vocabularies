@@ -56,9 +56,11 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $instance->save();
     $this->fieldInstances[] = $instance;
 
-    // Create another field for the Alpha bundle.
+    // Create another field for the Alpha bundle, but without instance label.
+    // Since the machine name will be used for the field labe, prepend a "b"
+    // to it to guarantee the order in the UI.
     $storage = FieldStorageConfig::create([
-      'field_name' => strtolower($this->randomMachineName()),
+      'field_name' => 'b' . strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test_with_bundle',
       'type' => 'open_vocabulary_reference',
     ]);
@@ -66,13 +68,11 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $instance = FieldConfig::create([
       'field_storage' => $storage,
       'bundle' => 'alpha',
-      // Prepend a "b" so this field is shown second.
-      'label' => 'b' . $this->randomString(),
     ]);
     $instance->save();
     $this->fieldInstances[] = $instance;
 
-    // Create a field without label attached to the entity_test entity.
+    // Create a field attached to the entity_test entity.
     $storage = FieldStorageConfig::create([
       'field_name' => strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
@@ -82,6 +82,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $instance = FieldConfig::create([
       'field_storage' => $storage,
       'bundle' => 'entity_test',
+      'label' => $this->randomString(),
     ]);
     $instance->save();
     $this->fieldInstances[] = $instance;
@@ -139,29 +140,25 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $this->assertEquals('Test entity', $groups[0]->find('css', 'legend')->getText());
     $this->assertEquals('Test entity with bundle', $groups[1]->find('css', 'legend')->getText());
 
-    $expected_labels = [
-      'Alpha',
-      'Beta',
-      'Alpha',
-      'Entity Test Bundle',
-    ];
-    foreach ($expected_labels as $key => $label) {
-      $expected_labels[$key] = sprintf('%s (%s)', $label, $this->fieldInstances[$key]->label());
-    }
+    // Prepare the expected labels for the fields attached to the Alpha bundle.
+    // Since the bundle has two fields, the field name or label will be appended
+    // to the checkboxes label.
+    $label_first_alpha_field = sprintf('Alpha (%s)', $this->fieldInstances[0]->label());
+    $label_second_alpha_field = sprintf('Alpha (%s)', $this->fieldInstances[2]->getName());
 
     $fields = $groups[0]->findAll('css', 'input[type="checkbox"]');
     $this->assertCount(1, $fields);
-    $this->assertEquals($expected_labels[3], $fields[0]->find('xpath', './../label')->getText());
+    $this->assertEquals('Entity Test Bundle', $fields[0]->find('xpath', './../label')->getText());
 
     $fields = $groups[1]->findAll('css', 'input[type="checkbox"]');
     $this->assertCount(3, $fields);
-    $this->assertEquals($expected_labels[0], $fields[0]->find('xpath', './../label')->getText());
-    $this->assertEquals($expected_labels[2], $fields[1]->find('xpath', './../label')->getText());
-    $this->assertEquals($expected_labels[1], $fields[2]->find('xpath', './../label')->getText());
+    $this->assertEquals($label_first_alpha_field, $fields[0]->find('xpath', './../label')->getText());
+    $this->assertEquals($label_second_alpha_field, $fields[1]->find('xpath', './../label')->getText());
+    $this->assertEquals('Beta', $fields[2]->find('xpath', './../label')->getText());
 
     // Select two fields.
-    $this->getSession()->getPage()->checkField($expected_labels[0]);
-    $this->getSession()->getPage()->checkField($expected_labels[3]);
+    $this->getSession()->getPage()->checkField($label_first_alpha_field);
+    $this->getSession()->getPage()->checkField('Entity Test Bundle');
 
     $this->assertEquals([
       '- Select -' => '- Select -',
@@ -227,22 +224,26 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldDisabled('Allowed number of values');
     $assert_session->fieldDisabled('Limit');
     $assert_session->fieldValueEquals('Label', 'Association 1');
-    // Verify that the checkboxes for the already selected fields are present
-    // but disabled.
-    foreach ([3, 0] as $label_index) {
-      $checkbox = $assert_session->fieldExists($expected_labels[$label_index]);
-      $this->assertTrue($checkbox->isChecked());
-      $this->assertTrue($checkbox->hasAttribute('disabled'));
-    }
     $assert_session->fieldValueEquals('Widget type', 'options_select');
     $assert_session->fieldValueEquals('Vocabulary', $vocabulary->id());
     // @todo update the predicate.
     $assert_session->fieldValueEquals('Predicate', 'http://example.com/#contain');
     $assert_session->fieldValueEquals('Help text', 'A description to help.');
     $assert_session->checkboxChecked('Required');
+    // Verify that the checkboxes for the already selected fields are present
+    // but disabled.
+    $assert_session->checkboxChecked($label_first_alpha_field);
+    $assert_session->fieldDisabled($label_first_alpha_field);
+    $assert_session->checkboxChecked('Entity Test Bundle');
+    $assert_session->fieldDisabled('Entity Test Bundle');
+    // The other checkboxes are not checked nor disabled.
+    $assert_session->checkboxNotChecked($label_second_alpha_field);
+    $assert_session->fieldEnabled($label_second_alpha_field);
+    $assert_session->checkboxNotChecked('Beta');
+    $assert_session->fieldEnabled('Beta');
 
     // Select one extra field.
-    $this->getSession()->getPage()->checkField($expected_labels[1]);
+    $this->getSession()->getPage()->checkField('Beta');
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Updated vocabulary association Association 1.');
 
