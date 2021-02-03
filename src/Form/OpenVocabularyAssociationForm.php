@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\open_vocabularies\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
@@ -78,16 +79,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
       '#disabled' => !$entity->isNew(),
     ];
 
-    $form['fields'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Fields'),
-      '#description' => $this->t('Select the field target of this association.'),
-      '#multiple' => TRUE,
-      '#options' => $this->getAvailableFields(),
-      '#default_value' => $entity->getFields(),
-      '#required' => TRUE,
-      '#disabled' => !$entity->isNew(),
-    ];
+    $form['fields'] = $this->getAvailableFields();
 
     $form['widget_type'] = [
       '#type' => 'select',
@@ -184,9 +176,13 @@ class OpenVocabularyAssociationForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
-    // Save only the values of the fields, without keys.
     $fields = $form_state->getValue('fields', []);
-    $form_state->setValue('fields', array_values($fields));
+    // Save only the checked fields.
+    $fields = array_filter($fields);
+    // Ensure a consistent order of the fields, independent from the labels.
+    // This also drops all the keys.
+    sort($fields);
+    $form_state->setValue('fields', $fields);
 
     // Save the cardinality.
     if ($form_state->getValue('cardinality') === 'number' && $form_state->getValue('cardinality_number')) {
@@ -235,36 +231,107 @@ class OpenVocabularyAssociationForm extends EntityForm {
   }
 
   /**
-   * Returns the available field types to use for the association.
-   *
-   * @todo Fix this method:
-   *   - do not rely on field config to find the fields;
-   *   - generate properly the option labels.
+   * Returns the available fields for the association.
    *
    * @return array
-   *   The field type names in select option format.
+   *   A list of field checkboxes, grouped by entity type.
+   *
+   * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+   * @SuppressWarnings(PHPMD.NPathComplexity)
    */
   protected function getAvailableFields(): array {
-    $storage = $this->entityTypeManager->getStorage('field_config');
-    $query = $storage->getQuery();
-    $query->condition('field_type', 'open_vocabulary_reference');
-    $results = $query->execute();
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+    $field_manager = \Drupal::service('entity_field.manager');
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $entity_type_bundle_info */
+    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
 
     $fields = [];
-    if (!$results) {
-      return $fields;
+    $entity_types = [];
+    foreach ($field_manager->getFieldMapByFieldType('open_vocabulary_reference') as $entity_type_id => $map) {
+      $entity_definition = $this->entityTypeManager->getDefinition($entity_type_id);
+
+      // Store the entity label separate so we can sort on them later.
+      $entity_types[$entity_type_id] = $entity_definition->getLabel() ?: $entity_type_id;
+
+      // The field manager method returns the fields and on which bundles they
+      // appear. Reverse this by storing in each bundle which fields are
+      // present. This is needed to determine which label to use later on.
+      foreach ($map as $field_name => $data) {
+        if (empty($data['bundles'])) {
+          continue;
+        }
+
+        foreach ($data['bundles'] as $bundle_id) {
+          $fields[$entity_type_id][$bundle_id][] = $field_name;
+        }
+      }
     }
 
-    foreach ($storage->loadMultiple($results) as $field) {
-      $label = $this->t('Field @field on entity @entity, bundle @bundle', [
-        '@field' => $field->label(),
-        '@entity' => $field->getTargetEntityTypeId(),
-        '@bundle' => $field->getTargetBundle(),
-      ]);
-      $fields[$field->id()] = $label;
+    $build = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Fields'),
+      // Specify that is required so the fieldset will show a visual clue.
+      '#required' => TRUE,
+      // Run the required validation.
+      '#element_validate' => [[static::class, 'validateFields']],
+    ];
+
+    // Sort the entity types by label.
+    natcasesort($entity_types);
+    foreach ($entity_types as $entity_type_id => $entity_label) {
+      $build['groups'][$entity_type_id] = [
+        '#type' => 'fieldgroup',
+        '#title' => $entity_label,
+        '#attributes' => [
+          'class' => [
+            'fieldgroup',
+            'form-composite',
+          ],
+        ],
+      ];
+
+      foreach ($fields[$entity_type_id] as $bundle_id => $field_names) {
+        $bundle_info = $entity_type_bundle_info->getBundleInfo($entity_type_id);
+        $bundle_label = $bundle_info[$bundle_id]['label'] ?: $bundle_id;
+        $definitions = $field_manager->getFieldDefinitions($entity_type_id, $bundle_id);
+        $bundle_has_only_one_field = count($field_names) === 1;
+
+        foreach ($field_names as $field_name) {
+          // Generate the unique identifier for the field.
+          $identifier = implode('.', [$entity_type_id, $bundle_id, $field_name]);
+          $checked = in_array($identifier, $this->entity->getFields());
+
+          $field_label = $definitions[$field_name]->getLabel() ?: $field_name;
+          if ($bundle_has_only_one_field) {
+            $title = $bundle_label;
+          }
+          else {
+            // Since more than one field is present on the same bundle, identify
+            // them by generating a title that uses bundle and field label.
+            $title = new FormattableMarkup('@bundle (@field)', [
+              '@bundle' => $bundle_label,
+              '@field' => $field_label,
+            ]);
+          }
+
+          $build['groups'][$entity_type_id][$identifier] = [
+            // Place all the checkboxes under the "fields" key so it's easier to
+            // retrieve values from the form state.
+            '#parents' => ['fields', $identifier],
+            '#type' => 'checkbox',
+            '#title' => $title,
+            '#return_value' => $identifier,
+            '#default_value' => $checked ? $identifier : NULL,
+            '#disabled' => !$this->entity->isNew() && $checked,
+          ];
+        }
+
+        // Sort the checkboxes by their title.
+        uasort($build['groups'][$entity_type_id], ['\Drupal\Component\Utility\SortArray', 'sortByTitleProperty']);
+      }
     }
 
-    return $fields;
+    return $build;
   }
 
   /**
@@ -281,6 +348,27 @@ class OpenVocabularyAssociationForm extends EntityForm {
     $entities = $storage->loadByProperties(['name' => $name]);
 
     return !empty($entities);
+  }
+
+  /**
+   * Element validate for the fields section.
+   *
+   * Enforces that at least one field is selected.
+   *
+   * @param array $elements
+   *   The element being validated.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   */
+  public static function validateFields(array &$elements, FormStateInterface $form_state, array $complete_form): void {
+    $fields = array_filter($form_state->getValue('fields', []));
+    if (empty($fields)) {
+      $form_state->setError($elements, t('Select at least one entry from the @label section.', [
+        '@label' => $elements['#title'],
+      ]));
+    }
   }
 
 }
