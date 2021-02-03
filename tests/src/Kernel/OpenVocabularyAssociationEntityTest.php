@@ -30,8 +30,22 @@ class OpenVocabularyAssociationEntityTest extends KernelTestBase {
   public function testEntityClass(): void {
     $storage = $this->container->get('entity_type.manager')->getStorage('open_vocabulary_association');
 
-    $vocabulary = $this->createVocabulary();
+    /** @var \Drupal\open_vocabularies\OpenVocabularyAssociationInterface $association */
+    $association = $storage->create();
+    $this->assertNull($association->label());
+    $this->assertEquals('.', $association->id());
+    $this->assertNull($association->getWidgetType());
+    $this->assertFalse($association->isRequired());
+    $this->assertNull($association->getHelpText());
+    $this->assertNull($association->getPredicate());
+    $this->assertEquals(1, $association->getCardinality());
 
+    $association->set('cardinality', '3');
+    $this->assertSame(3, $association->getCardinality());
+    $association->set('required', '1');
+    $this->assertTrue($association->isRequired());
+
+    $vocabulary = $this->createVocabulary();
     $values = [
       'label' => $this->randomString(),
       'vocabulary' => $vocabulary->id(),
