@@ -86,6 +86,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
       '#title' => $this->t('Widget type'),
       '#options' => $this->widgetManager->getOptions('entity_reference'),
       '#default_value' => $entity->getWidgetType(),
+      '#empty_value' => '',
       '#required' => TRUE,
     ];
 
@@ -94,6 +95,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
       '#title' => $this->t('Vocabulary'),
       '#options' => $this->getVocabularies(),
       '#default_value' => $entity->getVocabulary(),
+      '#empty_value' => '',
       '#required' => TRUE,
       '#disabled' => !$entity->isNew(),
     ];
@@ -107,6 +109,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
         'http://example.com/#about' => $this->t('About'),
       ],
       '#default_value' => $entity->getPredicate(),
+      '#empty_value' => '',
       '#required' => TRUE,
     ];
 
