@@ -54,15 +54,15 @@ interface OpenVocabularyAssociationInterface extends ConfigEntityInterface {
    * @return int
    *   The cardinality.
    */
-  public function getCardinality(): ?int;
+  public function getCardinality(): int;
 
   /**
    * Returns whether the association field is required or not.
    *
-   * @return bool|null
+   * @return bool
    *   Whether it's required or not.
    */
-  public function isRequired(): ?bool;
+  public function isRequired(): bool;
 
   /**
    * Returns the predicate.

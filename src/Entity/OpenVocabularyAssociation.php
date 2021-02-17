@@ -108,14 +108,14 @@ class OpenVocabularyAssociation extends ConfigEntityBase implements OpenVocabula
    *
    * @var int
    */
-  protected $cardinality;
+  protected $cardinality = 1;
 
   /**
    * Flag indicating whether the field is required.
    *
    * @var bool
    */
-  protected $required;
+  protected $required = FALSE;
 
   /**
    * The association predicate.
@@ -136,7 +136,7 @@ class OpenVocabularyAssociation extends ConfigEntityBase implements OpenVocabula
    *
    * @var int
    */
-  protected $weight;
+  protected $weight = 0;
 
   /**
    * {@inheritdoc}
@@ -178,15 +178,15 @@ class OpenVocabularyAssociation extends ConfigEntityBase implements OpenVocabula
   /**
    * {@inheritdoc}
    */
-  public function getCardinality(): ?int {
-    return $this->cardinality;
+  public function getCardinality(): int {
+    return (int) $this->cardinality;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isRequired(): ?bool {
-    return $this->required;
+  public function isRequired(): bool {
+    return (bool) $this->required;
   }
 
   /**
