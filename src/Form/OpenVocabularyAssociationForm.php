@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace Drupal\open_vocabularies\Form;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Form\FormStateInterface;
@@ -19,6 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @property \Drupal\open_vocabularies\OpenVocabularyAssociationInterface $entity
  */
 class OpenVocabularyAssociationForm extends EntityForm {
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * The entity type bundle info.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * The field widget plugin manager.
@@ -36,11 +52,17 @@ class OpenVocabularyAssociationForm extends EntityForm {
    *   The entity type manager.
    * @param \Drupal\Core\Field\WidgetPluginManager $widgetManager
    *   The field widget plugin manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
+   *   The entity type bundle info.
    */
-  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, WidgetPluginManager $widgetManager) {
+  public function __construct(MessengerInterface $messenger, EntityTypeManagerInterface $entityTypeManager, WidgetPluginManager $widgetManager, EntityFieldManagerInterface $entityFieldManager, EntityTypeBundleInfoInterface $entityTypeBundleInfo) {
     $this->messenger = $messenger;
     $this->entityTypeManager = $entityTypeManager;
     $this->widgetManager = $widgetManager;
+    $this->entityFieldManager = $entityFieldManager;
+    $this->entityTypeBundleInfo = $entityTypeBundleInfo;
   }
 
   /**
@@ -50,7 +72,9 @@ class OpenVocabularyAssociationForm extends EntityForm {
     return new static(
       $container->get('messenger'),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.field.widget')
+      $container->get('plugin.manager.field.widget'),
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -243,14 +267,9 @@ class OpenVocabularyAssociationForm extends EntityForm {
    * @SuppressWarnings(PHPMD.NPathComplexity)
    */
   protected function getAvailableFields(): array {
-    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
-    $field_manager = \Drupal::service('entity_field.manager');
-    /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $entity_type_bundle_info */
-    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-
     $fields = [];
     $entity_types = [];
-    foreach ($field_manager->getFieldMapByFieldType('open_vocabulary_reference') as $entity_type_id => $map) {
+    foreach ($this->entityFieldManager->getFieldMapByFieldType('open_vocabulary_reference') as $entity_type_id => $map) {
       $entity_definition = $this->entityTypeManager->getDefinition($entity_type_id);
 
       // Store the entity label separate so we can sort on them later.
@@ -294,9 +313,9 @@ class OpenVocabularyAssociationForm extends EntityForm {
       ];
 
       foreach ($fields[$entity_type_id] as $bundle_id => $field_names) {
-        $bundle_info = $entity_type_bundle_info->getBundleInfo($entity_type_id);
+        $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
         $bundle_label = $bundle_info[$bundle_id]['label'] ?: $bundle_id;
-        $definitions = $field_manager->getFieldDefinitions($entity_type_id, $bundle_id);
+        $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle_id);
         $bundle_has_only_one_field = count($field_names) === 1;
 
         foreach ($field_names as $field_name) {
