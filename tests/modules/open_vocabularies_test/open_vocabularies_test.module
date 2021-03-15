@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -33,4 +34,23 @@ function open_vocabularies_test_entity_test_with_bundle_access(EntityInterface $
   }
 
   return $result;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function open_vocabularies_test_form_open_vocabulary_association_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['actions']['rebuild'] = [
+    '#type' => 'submit',
+    '#value' => t('Test rebuild'),
+    '#weight' => -10,
+    '#submit' => ['_open_vocabularies_test_form_rebuild'],
+  ];
+}
+
+/**
+ * Sets a form to be rebuilt.
+ */
+function _open_vocabularies_test_form_rebuild(array &$form, FormStateInterface $form_state): void {
+  $form_state->setRebuild();
 }
