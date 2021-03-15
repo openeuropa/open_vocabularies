@@ -37,6 +37,13 @@ class OpenVocabularyAssociationForm extends EntityForm {
   protected $entityTypeBundleInfo;
 
   /**
+   * The entity with its original values.
+   *
+   * @var \Drupal\open_vocabularies\OpenVocabularyAssociationInterface
+   */
+  protected $original;
+
+  /**
    * The field widget plugin manager.
    *
    * @var \Drupal\Core\Field\WidgetPluginManager
@@ -76,6 +83,25 @@ class OpenVocabularyAssociationForm extends EntityForm {
       $container->get('entity_field.manager'),
       $container->get('entity_type.bundle.info')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function init(FormStateInterface $form_state) {
+    parent::init($form_state);
+
+    // After each form build, the entity stored in the form property gets
+    // rebuilt. To get access to the original values of the entity when the form
+    // was first loaded, we store the entity with its unchanged values.
+    // This will allow to discern for example which fields were already selected
+    // in the current saved status of the entity and which were picked during
+    // the current form rebuilds.
+    $this->original = $this->entity->isNew()
+      ? clone $this->entity
+      : $this->entityTypeManager
+        ->getStorage('open_vocabulary_association')
+        ->loadUnchanged($this->entity->id());
   }
 
   /**
@@ -321,7 +347,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
         foreach ($field_names as $field_name) {
           // Generate the unique identifier for the field.
           $identifier = implode('.', [$entity_type_id, $bundle_id, $field_name]);
-          $checked = in_array($identifier, $this->entity->getFields());
+          $checked = in_array($identifier, $this->original->getFields());
 
           $field_label = $definitions[$field_name]->getLabel() ?: $field_name;
           if ($bundle_has_only_one_field) {
