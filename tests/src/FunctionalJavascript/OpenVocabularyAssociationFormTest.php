@@ -197,6 +197,14 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
 
     $this->getSession()->getPage()->checkField('Required');
     $this->getSession()->getPage()->fillField('Help text', 'A description to help.');
+
+    // Verify that on form rebuilds, caused for example by AJAX actions from
+    // modules extending the form, checked checkboxes are not marked as
+    // disabled.
+    $this->getSession()->getPage()->pressButton('Test rebuild');
+    $assert_session->fieldEnabled($label_first_alpha_field);
+    $assert_session->fieldEnabled('Entity Test Bundle');
+
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Created new vocabulary association Association 1.');
 
@@ -248,7 +256,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->pageTextContains('Updated vocabulary association Association 1.');
 
     // Verify that all the fields are saved. This test assures that already
-    // selected fields are retained as disabled checkboxes are not submitted.
+    // selected fields are retained, as disabled checkboxes are not submitted.
     // It also verifies that all the field identifiers are correctly sorted.
     $association_storage = \Drupal::entityTypeManager()->getStorage('open_vocabulary_association');
     $association_storage->resetCache();
@@ -260,7 +268,22 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
       $this->fieldInstances[1]->id(),
     ], $association->getFields());
 
+    // Verify that for existing entities, the field checkboxes are not marked
+    // as disabled on form rebuilds.
+    $this->clickLink('Edit');
+    $this->getSession()->getPage()->checkField($label_second_alpha_field);
+    $this->getSession()->getPage()->pressButton('Test rebuild');
+    $assert_session->checkboxChecked('Entity Test Bundle');
+    $assert_session->fieldDisabled($label_first_alpha_field);
+    $assert_session->checkboxChecked($label_first_alpha_field);
+    $assert_session->fieldDisabled('Entity Test Bundle');
+    $assert_session->checkboxChecked($label_second_alpha_field);
+    $assert_session->fieldEnabled($label_second_alpha_field);
+    $assert_session->checkboxChecked('Beta');
+    $assert_session->fieldDisabled('Beta');
+
     // Tests the deletion form.
+    $this->drupalGet('/admin/structure/open-vocabulary-association');
     $assert_session->buttonExists('List additional actions')->press();
     $this->clickLink('Delete');
     $assert_session->pageTextContainsOnce('Are you sure you want to delete the vocabulary association Association 1?');
