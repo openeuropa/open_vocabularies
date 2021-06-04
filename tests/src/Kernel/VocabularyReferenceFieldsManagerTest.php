@@ -403,6 +403,8 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'type' => 'options_select',
       'weight' => -10,
       'region' => 'content',
+      'settings' => [],
+      'third_party_settings' => [],
     ], $render_form_display->getComponent('association_one_94ab077978'));
 
     // Create another vocabulary association, pointing to two fields of the
@@ -431,11 +433,20 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'type' => 'options_select',
       'weight' => -10,
       'region' => 'content',
+      'settings' => [],
+      'third_party_settings' => [],
     ], $render_form_display->getComponent('association_one_94ab077978'));
     $this->assertSame([
       'type' => 'entity_reference_autocomplete',
       'weight' => -9.999,
       'region' => 'content',
+      'settings' => [
+        'match_operator' => 'CONTAINS',
+        'match_limit' => 10,
+        'size' => 60,
+        'placeholder' => '',
+      ],
+      'third_party_settings' => [],
     ], $render_form_display->getComponent('association_two_94ab077978'));
 
     // Place the "only_bundle_a" field into the form display into a custom
@@ -462,6 +473,13 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'type' => 'entity_reference_autocomplete',
       'weight' => 0.001,
       'region' => 'custom_region',
+      'settings' => [
+        'match_operator' => 'CONTAINS',
+        'match_limit' => 10,
+        'size' => 60,
+        'placeholder' => '',
+      ],
+      'third_party_settings' => [],
     ], $render_form_display->getComponent('association_two_1c8d2512e6'));
 
     // Create another vocabulary association and set its weight higher than
@@ -488,6 +506,8 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'type' => 'options_buttons',
       'weight' => -10.02,
       'region' => 'content',
+      'settings' => [],
+      'third_party_settings' => [],
     ], $render_form_display->getComponent('association_three_94ab077978'));
   }
 
