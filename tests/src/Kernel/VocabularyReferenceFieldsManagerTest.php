@@ -399,7 +399,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
     // Verify that the field is using the correct widget specified in the
     // association. We use the subset assertion as the component has extra
     // settings key which we don't set and are defaulted.
-    $this->assertArraySubset([
+    $this->assertSame([
       'type' => 'options_select',
       'weight' => -10,
       'region' => 'content',
@@ -427,12 +427,12 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'association_two_94ab077978',
     ], array_keys($render_form_display->getComponents()));
 
-    $this->assertArraySubset([
+    $this->assertSame([
       'type' => 'options_select',
       'weight' => -10,
       'region' => 'content',
     ], $render_form_display->getComponent('association_one_94ab077978'));
-    $this->assertArraySubset([
+    $this->assertSame([
       'type' => 'entity_reference_autocomplete',
       'weight' => -9.999,
       'region' => 'content',
@@ -458,7 +458,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
 
     // The field has inherited the region from the vocabulary reference field
     // widget.
-    $this->assertArraySubset([
+    $this->assertSame([
       'type' => 'entity_reference_autocomplete',
       'weight' => 0.001,
       'region' => 'custom_region',
@@ -484,7 +484,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'association_two_1c8d2512e6',
     ], array_keys($render_form_display->getComponents()));
 
-    $this->assertArraySubset([
+    $this->assertSame([
       'type' => 'options_buttons',
       'weight' => -10.02,
       'region' => 'content',

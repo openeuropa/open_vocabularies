@@ -35,7 +35,7 @@ class VocabularyReferenceFieldTest extends OpenVocabularyTestBase {
     $this->getSession()->getPage()->pressButton('Save');
 
     $row = $assert_session->elementExists('xpath', '//table/tbody/tr[./td[1][text()="Vocabularies"]]');
-    $this->assertContains('This widget does not render any form element. It can be used as placeholder to position the single reference fields on the entity form display.', $row->getText());
+    $this->assertStringContainsString('This widget does not render any form element. It can be used as placeholder to position the single reference fields on the entity form display.', $row->getText());
 
     $this->drupalLogin($this->createUser([
       'access content',
