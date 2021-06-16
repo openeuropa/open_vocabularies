@@ -149,7 +149,7 @@ class OpenVocabularyAdminTest extends BrowserTestBase {
     $assert_session->buttonNotExists('Delete');
     $assert_session->linkExists('Cancel');
     $this->getSession()->getPage()->clickLink('Cancel');
-    $this->assertUrl('admin/structure/open-vocabulary');
+    $this->assertSession()->addressEquals('admin/structure/open-vocabulary');
 
     // Delete the associations and try again to delete the form.
     $association_one->delete();
