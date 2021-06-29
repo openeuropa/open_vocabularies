@@ -1,8 +1,8 @@
-name: 'Open Vocabularies test'
-description: 'Test module for Open Vocabularies.'
+name: Open Vocabularies test
+description: Test module for Open Vocabularies.
 type: module
 package: Testing
-core: 8.x
+core_version_requirement: ^8.9 || ^9.1
 
 dependencies:
   - drupal:entity_test

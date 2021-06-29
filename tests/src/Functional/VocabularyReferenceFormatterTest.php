@@ -33,7 +33,7 @@ class VocabularyReferenceFormatterTest extends OpenVocabularyTestBase {
 
     // Verify the default options.
     $row = $assert_session->elementExists('xpath', '//table/tbody/tr[./td[1][text()="Vocabularies"]]');
-    $this->assertContains('Link to the referenced entity', $row->getText());
+    $this->assertStringContainsString('Link to the referenced entity', $row->getText());
     $assert_session->buttonExists('vocabulary_reference_settings_edit', $row)->press();
     $checkbox = $assert_session->fieldExists('Link label to the referenced entity', $row);
     $this->assertTrue($checkbox->isChecked());
@@ -41,8 +41,8 @@ class VocabularyReferenceFormatterTest extends OpenVocabularyTestBase {
     // Disable the link option and verify the summary.
     $checkbox->uncheck();
     $assert_session->buttonExists('Update', $row)->press();
-    $this->assertNotContains('Link to the referenced entity', $row->getText());
-    $this->assertContains('No link', $row->getText());
+    $this->assertStringNotContainsString('Link to the referenced entity', $row->getText());
+    $this->assertStringContainsString('No link', $row->getText());
     // Verify that current value is correctly set as default in the settings
     // form.
     $assert_session->buttonExists('vocabulary_reference_settings_edit', $row)->press();
