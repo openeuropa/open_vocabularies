@@ -114,7 +114,7 @@ class OpenVocabularyForm extends EntityForm {
       '#parents' => ['settings', 'handler_settings'],
     ];
 
-    // Not all of the handler settings are meant to be disabled, for example
+    // Not all the handler settings are meant to be disabled, for example
     // the sorting options or adding a bundle. Show a message to the user,
     // warning them about the possible issues.
     if ($has_associations) {
