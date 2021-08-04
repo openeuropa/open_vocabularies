@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the open vocabulary association entity forms.
@@ -18,7 +18,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
 class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
 
   use NativeBrowserValidationTrait;
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * The field instance labels created for this test, keyed by field name.

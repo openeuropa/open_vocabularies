@@ -15,7 +15,7 @@ use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\open_vocabularies\Plugin\Field\ComputedVocabularyReferenceFieldItemList;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the hooks implemented by the fields manager class.
@@ -24,7 +24,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}

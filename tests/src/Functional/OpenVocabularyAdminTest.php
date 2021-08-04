@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\open_vocabularies\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the administration functionality regarding open vocabulary entities.
@@ -14,7 +14,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class OpenVocabularyAdminTest extends BrowserTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}

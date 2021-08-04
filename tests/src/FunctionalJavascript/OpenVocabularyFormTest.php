@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the open vocabulary entity forms.
@@ -13,7 +13,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * Tests the create and update routes.

@@ -8,7 +8,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the computed field item list class.
@@ -18,7 +18,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class ComputedVocabularyReferenceFieldItemListTest extends FieldKernelTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}

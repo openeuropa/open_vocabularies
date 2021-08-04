@@ -10,9 +10,9 @@ use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\open_vocabularies\OpenVocabularyInterface;
 
 /**
- * Provides helper methods to create vocabulary and association entities.
+ * Provides helper methods for vocabulary and association tests.
  */
-trait VocabularyCreationTrait {
+trait VocabularyTestTrait {
 
   /**
    * Creates and returns an Open Vocabulary entity.

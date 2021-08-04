@@ -6,7 +6,7 @@ namespace Drupal\Tests\open_vocabularies\Functional;
 
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the administration side of open vocabulary association entities.
@@ -15,7 +15,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class OpenVocabularyAssociationAdminTest extends BrowserTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}
