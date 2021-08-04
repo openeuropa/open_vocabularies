@@ -258,10 +258,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     // Verify that all the fields are saved. This test assures that already
     // selected fields are retained, as disabled checkboxes are not submitted.
     // It also verifies that all the field identifiers are correctly sorted.
-    $association_storage = \Drupal::entityTypeManager()->getStorage('open_vocabulary_association');
-    $association_storage->resetCache();
-    \Drupal::configFactory()->reset();
-    $association = $association_storage->load($vocabulary->id() . '.association_1');
+    $association = $this->reloadVocabularyAssociation($vocabulary->id() . '.association_1');
     $this->assertEquals([
       $this->fieldInstances[3]->id(),
       $this->fieldInstances[0]->id(),

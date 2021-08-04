@@ -74,4 +74,34 @@ trait VocabularyTestTrait {
     return $association;
   }
 
+  /**
+   * Reloads a vocabulary entity from the database, bypassing caches.
+   *
+   * @param string $vocabulary_id
+   *   The vocabulary ID.
+   *
+   * @return \Drupal\open_vocabularies\OpenVocabularyInterface|null
+   *   The reloaded vocabulary entity, or NULL if not found.
+   */
+  protected function reloadVocabulary(string $vocabulary_id): ?OpenVocabularyInterface {
+    \Drupal::configFactory()->reset('open_vocabularies.open_vocabulary.' . $vocabulary_id);
+
+    return \Drupal::entityTypeManager()->getStorage('open_vocabulary')->loadUnchanged($vocabulary_id);
+  }
+
+  /**
+   * Reloads an association entity from the database, bypassing caches.
+   *
+   * @param string $association_id
+   *   The vocabulary association ID.
+   *
+   * @return \Drupal\open_vocabularies\OpenVocabularyAssociationInterface|null
+   *   The reloaded vocabulary association entity, or NULL if not found.
+   */
+  protected function reloadVocabularyAssociation(string $association_id): ?OpenVocabularyAssociationInterface {
+    \Drupal::configFactory()->reset('open_vocabularies.open_vocabulary_association.' . $association_id);
+
+    return \Drupal::entityTypeManager()->getStorage('open_vocabulary_association')->loadUnchanged($association_id);
+  }
+
 }
