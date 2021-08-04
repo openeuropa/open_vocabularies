@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
 use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests the open vocabulary entity forms.
@@ -13,7 +14,12 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
  */
 class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
-  use VocabularyTestTrait;
+  use TaxonomyTestTrait {
+    TaxonomyTestTrait::createVocabulary as createCoreTaxonomyVocabulary;
+  }
+  use VocabularyTestTrait {
+    VocabularyTestTrait::createVocabulary insteadof TaxonomyTestTrait;
+  }
 
   /**
    * Tests the create and update routes.
@@ -141,6 +147,34 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldNotExists('Store new items in');
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
+
+    // Create a core taxonomy vocabulary.
+    $taxonomy = $this->createCoreTaxonomyVocabulary();
+    // Edit the vocabulary again.
+    $this->clickLink('Edit');
+    // Change the vocabulary type to one where the sort fields are not exposed.
+    $this->getSession()->getPage()->find('named', [
+      'radio',
+      'Taxonomy',
+    ])->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->findField($taxonomy->label())->check();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->fieldNotExists('Sort by');
+    $assert_session->fieldNotExists('Sort direction');
+    $this->getSession()->getPage()->findButton('Save')->press();
+    $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
+
+    $vocabulary = $this->reloadVocabulary('vocabulary_1');
+    $this->assertEquals([
+      'target_bundles' => [$taxonomy->id() => $taxonomy->id()],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+      'sort' => [
+        'field' => 'name',
+        'direction' => 'asc',
+      ],
+    ], $vocabulary->getHandlerSettings());
 
     // Create an association that targets this vocabulary.
     $this->createVocabularyAssociation('vocabulary_1');

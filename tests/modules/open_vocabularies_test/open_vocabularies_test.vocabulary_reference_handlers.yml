@@ -7,3 +7,6 @@ test_alter_hook:
 entity_test_with_bundle:
   label: 'Entity test with bundle'
   target_type: entity_test_with_bundle
+taxonomy_term:
+  label: 'Taxonomy'
+  target_type: taxonomy_term
