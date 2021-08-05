@@ -146,14 +146,20 @@ class OpenVocabularyForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
+    // Whenever the handler plugin is changed, reset the submitted handler
+    // settings so that any configuration of the old handler is not kept for the
+    // new one. This has to happen before the entity is built, as both form
+    // state and entity will be used when the form is rebuilt.
+    if ($this->entity->getHandler() !== $form_state->getValue('handler')) {
+      $form_state->unsetValue(['settings', 'handler_settings']);
+    }
+
     // The selection handlers expect the form elements to be under a specific
     // array key. Move the handler settings up to match our entity property.
     $handler_settings = $form_state->getValue(['settings', 'handler_settings'], []);
-
     // Force auto create settings to disabled.
     $handler_settings['auto_create'] = FALSE;
     $handler_settings['auto_create_bundle'] = NULL;
-
     $form_state->setValue('handler_settings', $handler_settings);
 
     return parent::buildEntity($form, $form_state);
