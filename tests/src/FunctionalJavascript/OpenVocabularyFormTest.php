@@ -35,29 +35,47 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldExists('Description')->setValue($description);
     $assert_session->elementExists('named', ['fieldset', 'Vocabulary type']);
     $assert_session->elementExists('named', ['radio', 'Test entities']);
-    $assert_session->elementExists('named', ['radio', 'Tests the info alter hook']);
+    $assert_session->elementExists('named', [
+      'radio',
+      'Tests the info alter hook',
+    ]);
     $assert_session->elementExists('named', ['radio', 'Entity test with bundle']);
     // Verify that the vocabulary type field is required.
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Error message Vocabulary type field is required.');
 
     // Choose a vocabulary type.
-    $radio = $this->getSession()->getPage()->find('named', ['radio', 'Tests the info alter hook']);
+    $radio = $this->getSession()->getPage()->find('named', [
+      'radio',
+      'Tests the info alter hook',
+    ]);
     $radio->click();
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->elementExists('named', ['fieldset', 'Entity Test label bundle']);
+    $assert_session->elementExists('named', [
+      'fieldset',
+      'Entity Test label bundle',
+    ]);
     $assert_session->checkboxNotChecked('Entity Test Bundle');
     $assert_session->pageTextNotContains('Please note: this vocabulary is used by one or more associations');
 
     // Change the selected vocabulary type.
-    $radio = $this->getSession()->getPage()->find('named', ['radio', 'Entity test with bundle']);
+    $radio = $this->getSession()->getPage()->find('named', [
+      'radio',
+      'Entity test with bundle',
+    ]);
     $radio->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Please note: this vocabulary is used by one or more associations');
     // Verify that the previous vocabulary reference handler form elements have
     // been replaced with the ones of the newly selected handler.
-    $assert_session->elementNotExists('named', ['fieldset', 'Entity Test label bundle']);
-    $assert_session->elementNotExists('named', ['checkbox', 'Entity Test Bundle']);
+    $assert_session->elementNotExists('named', [
+      'fieldset',
+      'Entity Test label bundle',
+    ]);
+    $assert_session->elementNotExists('named', [
+      'checkbox',
+      'Entity Test Bundle',
+    ]);
     $assert_session->elementExists('named', ['fieldset', 'Test entity bundle']);
     $assert_session->checkboxNotChecked('Alpha');
     $assert_session->checkboxNotChecked('Beta');
@@ -106,7 +124,10 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     // Verify that the entered values are presented in the form.
     $assert_session->fieldValueEquals('Label', 'Vocabulary 1');
     $assert_session->fieldValueEquals('Description', $description);
-    $this->assertTrue($assert_session->elementExists('named', ['radio', 'Entity test with bundle'])->isChecked());
+    $this->assertTrue($assert_session->elementExists('named', [
+      'radio',
+      'Entity test with bundle',
+    ])->isChecked());
     $assert_session->pageTextNotContains('Please note: this vocabulary is used by one or more associations');
     $assert_session->checkboxChecked('Alpha');
     $assert_session->checkboxNotChecked('Beta');

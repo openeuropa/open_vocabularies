@@ -375,7 +375,10 @@ class OpenVocabularyAssociationForm extends EntityForm {
         }
 
         // Sort the checkboxes by their title.
-        uasort($build['groups'][$entity_type_id], ['\Drupal\Component\Utility\SortArray', 'sortByTitleProperty']);
+        uasort($build['groups'][$entity_type_id], [
+          '\Drupal\Component\Utility\SortArray',
+          'sortByTitleProperty',
+        ]);
       }
     }
 

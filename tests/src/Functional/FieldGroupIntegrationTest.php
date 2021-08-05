@@ -72,7 +72,10 @@ class FieldGroupIntegrationTest extends OpenVocabularyTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('/node/add/page');
 
-    $fieldset = $assert_session->elementExists('named', ['fieldset', 'Group foo']);
+    $fieldset = $assert_session->elementExists('named', [
+      'fieldset',
+      'Group foo',
+    ]);
     // Prepare an XPath to assert the position of the elements.
     // The first element inside the fieldset is the wrapper itself.
     $xpath = '((./div[@class and contains(concat(" ", normalize-space(@class), " "), " fieldset-wrapper ")]'
@@ -102,13 +105,19 @@ class FieldGroupIntegrationTest extends OpenVocabularyTestBase {
 
     // The "foo" fieldset group doesn't contain anymore the computed reference
     // fields.
-    $fieldset_foo = $assert_session->elementExists('named', ['fieldset', 'Group foo']);
+    $fieldset_foo = $assert_session->elementExists('named', [
+      'fieldset',
+      'Group foo',
+    ]);
     $assert_session->fieldNotExists('Participating countries', $fieldset_foo);
     $assert_session->fieldNotExists('Hosting country', $fieldset_foo);
     $assert_session->fieldExists('Responsible person', $fieldset_foo);
 
     // The fields show correctly inside the "bar" group.
-    $fieldset_bar = $assert_session->elementExists('named', ['fieldset', 'Group bar']);
+    $fieldset_bar = $assert_session->elementExists('named', [
+      'fieldset',
+      'Group bar',
+    ]);
     $assert_session->fieldExists('Participating countries', $fieldset_bar);
     $assert_session->fieldExists('Hosting country', $fieldset_bar);
   }

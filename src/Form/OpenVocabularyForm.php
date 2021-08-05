@@ -103,7 +103,12 @@ class OpenVocabularyForm extends EntityForm {
       '#type' => 'container',
       '#id' => 'vocabulary-handler-settings-wrapper',
       '#process' => [[EntityReferenceItem::class, 'fieldSettingsAjaxProcess']],
-      '#element_validate' => [[$this, 'validateSelectionPluginHandlerConfiguration']],
+      '#element_validate' => [
+        [
+          $this,
+          'validateSelectionPluginHandlerConfiguration',
+        ],
+      ],
       // The selection handlers expect the form elements to be under a specific
       // array key.
       '#parents' => ['settings', 'handler_settings'],
