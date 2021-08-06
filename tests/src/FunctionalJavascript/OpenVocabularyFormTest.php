@@ -149,7 +149,7 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
     // Create a core taxonomy vocabulary.
     $taxonomy = $this->createCoreTaxonomyVocabulary();
-    // Edit the vocabulary again.
+    // Edit the open vocabulary again.
     $this->clickLink('Edit');
     // Change the vocabulary type to one where the sort fields are not exposed.
     $this->getSession()->getPage()->find('named', [
@@ -159,11 +159,15 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $this->getSession()->getPage()->findField($taxonomy->label())->check();
     $assert_session->assertWaitOnAjaxRequest();
+    // The sort fields are not rendered by the TermSelection handler.
+    // @see \Drupal\taxonomy\Plugin\EntityReferenceSelection\TermSelection::buildConfigurationForm()
     $assert_session->fieldNotExists('Sort by');
     $assert_session->fieldNotExists('Sort direction');
     $this->getSession()->getPage()->findButton('Save')->press();
     $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
 
+    // Verify that the sort values match the defaults of the term selection
+    // handler.
     $vocabulary = $this->reloadVocabulary('vocabulary_1');
     $this->assertEquals([
       'target_bundles' => [$taxonomy->id() => $taxonomy->id()],
