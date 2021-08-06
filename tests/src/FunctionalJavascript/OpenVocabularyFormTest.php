@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
@@ -112,6 +113,8 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     // saved correctly.
     /** @var \Drupal\open_vocabularies\OpenVocabularyInterface $vocabulary */
     $vocabulary = \Drupal::entityTypeManager()->getStorage('open_vocabulary')->load('vocabulary_1');
+    $this->assertEquals($description, $vocabulary->getDescription());
+    $this->assertEquals('entity_test_with_bundle', $vocabulary->getHandler());
     $this->assertEquals([
       'target_bundles' => ['alpha' => 'alpha'],
       'sort' => [
@@ -176,6 +179,45 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
       'sort' => [
         'field' => 'name',
         'direction' => 'asc',
+      ],
+    ], $vocabulary->getHandlerSettings());
+
+    // Create an entity test bundle with the same name as the core taxonomy
+    // above.
+    \Drupal::service('cache_tags.invalidator')->resetChecksums();
+    EntityTestBundle::create([
+      'id' => $taxonomy->id(),
+      'label' => $taxonomy->label(),
+    ])->save();
+
+    // Edit the open vocabulary again.
+    $this->clickLink('Edit');
+    $assert_session->checkboxChecked($taxonomy->label());
+    // Switch to the entity test with bundle.
+    $this->getSession()->getPage()->find('named', [
+      'radio',
+      'Entity test with bundle',
+    ])->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // The commonly named bundle checkbox shouldn't be checked.
+    $assert_session->checkboxNotChecked($taxonomy->label());
+    // The sort field is not visible as no bundle is checked.
+    $this->assertFalse($assert_session->fieldExists('Sort by')->isVisible());
+    // Select one bundle and save the form.
+    $this->getSession()->getPage()->findField('Beta')->check();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->findButton('Save')->press();
+    $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
+    // Verify that the saved configuration is correct.
+    $vocabulary = $this->reloadVocabulary('vocabulary_1');
+    $this->assertEquals('entity_test_with_bundle', $vocabulary->getHandler());
+    $this->assertEquals([
+      'target_bundles' => ['beta' => 'beta'],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+      'sort' => [
+        'field' => '_none',
+        'direction' => 'ASC',
       ],
     ], $vocabulary->getHandlerSettings());
 
