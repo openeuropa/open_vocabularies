@@ -1,10 +1,20 @@
 # Change Log
 
+## [1.0.0-alpha4](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha4) (2021-08-12)
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha3...1.0.0-alpha4)
+
+**Merged pull requests:**
+
+- EWPP-0000: Fix coding standards. [\#30](https://github.com/openeuropa/open_vocabularies/pull/30) ([brummbar](https://github.com/brummbar))
+- OEL-165: Drupal 9 compatibility fixes. [\#28](https://github.com/openeuropa/open_vocabularies/pull/28) ([saidatom](https://github.com/saidatom))
+- EWPP-721: Update xdebug configuration. [\#22](https://github.com/openeuropa/open_vocabularies/pull/22) ([22Alexandra](https://github.com/22Alexandra))
+
 ## [1.0.0-alpha3](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha3) (2021-03-19)
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha2...1.0.0-alpha3)
 
 **Merged pull requests:**
 
+- Prepare changelog for release 1.0.0-alpha3. [\#27](https://github.com/openeuropa/open_vocabularies/pull/27) ([brummbar](https://github.com/brummbar))
 - EWPP-868: Prevent locking of fields checkboxes on form rebuild. [\#26](https://github.com/openeuropa/open_vocabularies/pull/26) ([brummbar](https://github.com/brummbar))
 - EWPP-0000: Properly inject services. [\#24](https://github.com/openeuropa/open_vocabularies/pull/24) ([brummbar](https://github.com/brummbar))
 
