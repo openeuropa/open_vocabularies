@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the open vocabulary association entity forms.
@@ -18,7 +18,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
 class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
 
   use NativeBrowserValidationTrait;
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * The field instance labels created for this test, keyed by field name.
@@ -258,10 +258,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     // Verify that all the fields are saved. This test assures that already
     // selected fields are retained, as disabled checkboxes are not submitted.
     // It also verifies that all the field identifiers are correctly sorted.
-    $association_storage = \Drupal::entityTypeManager()->getStorage('open_vocabulary_association');
-    $association_storage->resetCache();
-    \Drupal::configFactory()->reset();
-    $association = $association_storage->load($vocabulary->id() . '.association_1');
+    $association = $this->reloadVocabularyAssociation($vocabulary->id() . '.association_1');
     $this->assertEquals([
       $this->fieldInstances[3]->id(),
       $this->fieldInstances[0]->id(),

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\open_vocabularies\Form;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
@@ -103,18 +104,13 @@ class OpenVocabularyForm extends EntityForm {
       '#type' => 'container',
       '#id' => 'vocabulary-handler-settings-wrapper',
       '#process' => [[EntityReferenceItem::class, 'fieldSettingsAjaxProcess']],
-      '#element_validate' => [
-        [
-          $this,
-          'validateSelectionPluginHandlerConfiguration',
-        ],
-      ],
+      '#element_validate' => ['::validateSelectionPluginHandlerConfiguration'],
       // The selection handlers expect the form elements to be under a specific
       // array key.
       '#parents' => ['settings', 'handler_settings'],
     ];
 
-    // Not all of the handler settings are meant to be disabled, for example
+    // Not all the handler settings are meant to be disabled, for example
     // the sorting options or adding a bundle. Show a message to the user,
     // warning them about the possible issues.
     if ($has_associations) {
@@ -146,14 +142,31 @@ class OpenVocabularyForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
-    // The selection handlers expect the form elements to be under a specific
-    // array key. Move the handler settings up to match our entity property.
-    $handler_settings = $form_state->getValue(['settings', 'handler_settings'], []);
+    // Whenever the handler plugin is changed, reset the submitted handler
+    // settings so that any configuration of the old handler is not kept for the
+    // new one. This has to happen before the entity is built, as both form
+    // state and entity will be used when the form is rebuilt.
+    if ($this->entity->getHandler() !== $form_state->getValue('handler')) {
+      $form_state->unsetValue(['settings', 'handler_settings']);
+      // The raw user input is used to populate the values for form elements
+      // during rebuild. This causes fields that have the same name to inherit
+      // the values of the previous handler settings submissions. This leads to
+      // unexpected behaviours (see tests).
+      // This cannot be solved by moving the handler configuration form under an
+      // element with the plugin ID as key, as selection handlers expect their
+      // configuration form elements/values to have a specific structure and
+      // naming.
+      NestedArray::unsetValue($form_state->getUserInput(), [
+        'settings',
+        'handler_settings',
+      ]);
+    }
 
+    $handler_settings = $form_state->getValue(['settings', 'handler_settings'], []);
     // Force auto create settings to disabled.
     $handler_settings['auto_create'] = FALSE;
     $handler_settings['auto_create_bundle'] = NULL;
-
+    // Move the handler settings up to match our entity property.
     $form_state->setValue('handler_settings', $handler_settings);
 
     return parent::buildEntity($form, $form_state);

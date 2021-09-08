@@ -6,3 +6,6 @@ vocabulary_reference_handler_settings.test_alter_hook:
 
 vocabulary_reference_handler_settings.entity_test_with_bundle:
   type: entity_reference_selection.default
+
+vocabulary_reference_handler_settings.taxonomy_term:
+  type: entity_reference_selection.default

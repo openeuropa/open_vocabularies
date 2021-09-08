@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\open_vocabularies\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests for the open vocabulary association storage class.
@@ -15,7 +15,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class OpenVocabularyAssociationStorageTest extends KernelTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}

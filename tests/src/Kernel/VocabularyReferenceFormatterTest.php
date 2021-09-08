@@ -14,7 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -26,7 +26,7 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class VocabularyReferenceFormatterTest extends KernelTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}

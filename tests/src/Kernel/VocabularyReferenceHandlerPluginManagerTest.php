@@ -52,6 +52,13 @@ class VocabularyReferenceHandlerPluginManagerTest extends KernelTestBase {
         'class' => VocabularyReferenceHandlerDefault::class,
         'provider' => 'open_vocabularies_test',
       ],
+      'taxonomy_term' => [
+        'label' => new TranslatableMarkup('Taxonomy'),
+        'id' => 'taxonomy_term',
+        'target_type' => 'taxonomy_term',
+        'class' => VocabularyReferenceHandlerDefault::class,
+        'provider' => 'open_vocabularies_test',
+      ],
     ];
     $this->assertEquals($expected, $manager->getDefinitions());
   }
@@ -68,6 +75,7 @@ class VocabularyReferenceHandlerPluginManagerTest extends KernelTestBase {
       'test_entity_plugin' => new TranslatableMarkup('Test entities'),
       'test_alter_hook' => new TranslatableMarkup('Tests the info alter hook'),
       'entity_test_with_bundle' => new TranslatableMarkup('Entity test with bundle'),
+      'taxonomy_term' => new TranslatableMarkup('Taxonomy'),
     ];
     $this->assertEquals($expected, $manager->getDefinitionsAsOptions());
   }

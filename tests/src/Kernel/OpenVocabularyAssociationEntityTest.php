@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\open_vocabularies\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the OpenVocabularyAssociation entity.
@@ -14,7 +14,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class OpenVocabularyAssociationEntityTest extends KernelTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}

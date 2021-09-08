@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests the open vocabulary entity forms.
@@ -13,7 +15,12 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
-  use VocabularyCreationTrait;
+  use TaxonomyTestTrait {
+    TaxonomyTestTrait::createVocabulary as createCoreTaxonomyVocabulary;
+  }
+  use VocabularyTestTrait {
+    VocabularyTestTrait::createVocabulary insteadof TaxonomyTestTrait;
+  }
 
   /**
    * Tests the create and update routes.
@@ -85,9 +92,8 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
 
     // Verify that the entity reference plugin ajax and states functionalities
     // work correctly.
-    $sorty_by = $assert_session->fieldExists('Sort by');
-    // @todo Restore this line when Drupal 8.8 compatibility is dropped.
-    // $this->assertFalse($sorty_by->isVisible());
+    $sort_by = $assert_session->fieldExists('Sort by');
+    $this->assertFalse($sort_by->isVisible());
     $this->getSession()->getPage()->findField('Alpha')->check();
     $assert_session->assertWaitOnAjaxRequest();
     $sort_by = $assert_session->fieldExists('Sort by');
@@ -107,6 +113,8 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     // saved correctly.
     /** @var \Drupal\open_vocabularies\OpenVocabularyInterface $vocabulary */
     $vocabulary = \Drupal::entityTypeManager()->getStorage('open_vocabulary')->load('vocabulary_1');
+    $this->assertEquals($description, $vocabulary->getDescription());
+    $this->assertEquals('entity_test_with_bundle', $vocabulary->getHandler());
     $this->assertEquals([
       'target_bundles' => ['alpha' => 'alpha'],
       'sort' => [
@@ -141,6 +149,84 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldNotExists('Store new items in');
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
+
+    // Create a core taxonomy vocabulary.
+    $taxonomy = $this->createCoreTaxonomyVocabulary();
+    // Edit the open vocabulary again.
+    $this->clickLink('Edit');
+    // Change the vocabulary type to one where the sort fields are not exposed.
+    $this->getSession()->getPage()->find('named', [
+      'radio',
+      'Taxonomy',
+    ])->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->findField($taxonomy->label())->check();
+    $assert_session->assertWaitOnAjaxRequest();
+    // The sort fields are not rendered by the TermSelection handler.
+    // @see \Drupal\taxonomy\Plugin\EntityReferenceSelection\TermSelection::buildConfigurationForm()
+    $assert_session->fieldNotExists('Sort by');
+    $assert_session->fieldNotExists('Sort direction');
+    $this->getSession()->getPage()->findButton('Save')->press();
+    $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
+
+    // Verify that the sort values match the defaults of the term selection
+    // handler.
+    $vocabulary = $this->reloadVocabulary('vocabulary_1');
+    $this->assertEquals([
+      'target_bundles' => [$taxonomy->id() => $taxonomy->id()],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+      'sort' => [
+        'field' => 'name',
+        'direction' => 'asc',
+      ],
+    ], $vocabulary->getHandlerSettings());
+
+    // Create an entity test bundle with the same name as the core taxonomy
+    // above.
+    \Drupal::service('cache_tags.invalidator')->resetChecksums();
+    EntityTestBundle::create([
+      'id' => $taxonomy->id(),
+      'label' => $taxonomy->label(),
+    ])->save();
+
+    // Edit the open vocabulary again.
+    $this->clickLink('Edit');
+    $assert_session->checkboxChecked($taxonomy->label());
+    // Switch to the entity test with bundle.
+    $this->getSession()->getPage()->find('named', [
+      'radio',
+      'Entity test with bundle',
+    ])->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    // The commonly named bundle checkbox shouldn't be checked.
+    $assert_session->checkboxNotChecked($taxonomy->label());
+    // The sort field is not visible as no bundle is checked.
+    $this->assertFalse($assert_session->fieldExists('Sort by')->isVisible());
+    // Select one bundle and save the form.
+    $this->getSession()->getPage()->findField('Beta')->check();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->findButton('Save')->press();
+    $assert_session->pageTextContains('Status message Updated vocabulary Vocabulary 1.');
+    // Verify that the saved configuration is correct.
+    $vocabulary = $this->reloadVocabulary('vocabulary_1');
+    $this->assertEquals('entity_test_with_bundle', $vocabulary->getHandler());
+    $expected = [
+      'target_bundles' => ['beta' => 'beta'],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+      'sort' => [
+        'field' => '_none',
+        'direction' => 'ASC',
+      ],
+    ];
+    // For Drupal versions earlier than 9.1.x, the direction form element is not
+    // rendered when no field is selected. So the direction value is not
+    // submitted and not present in the saved configuration.
+    if (version_compare(\Drupal::VERSION, '9.1', '<')) {
+      unset($expected['sort']['direction']);
+    }
+    $this->assertEquals($expected, $vocabulary->getHandlerSettings());
 
     // Create an association that targets this vocabulary.
     $this->createVocabularyAssociation('vocabulary_1');

@@ -14,7 +14,7 @@ use Drupal\open_vocabularies\Plugin\Field\FieldType\VocabularyReferenceItem;
 use Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList;
 use Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the open_vocabulary_reference field type.
@@ -23,7 +23,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyCreationTrait;
  */
 class VocabularyReferenceItemTest extends FieldKernelTestBase {
 
-  use VocabularyCreationTrait;
+  use VocabularyTestTrait;
 
   /**
    * {@inheritdoc}
