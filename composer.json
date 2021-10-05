@@ -15,7 +15,7 @@
         "drupal/config_devel": "~1.2",
         "drupal/drupal-extension": "^4.1",
         "drush/drush": "^10.3",
-        "drupal/field_group": "^3.1",
+        "drupal/field_group": "^3.2",
         "openeuropa/code-review": "^1.6",
         "openeuropa/drupal-core-require-dev": "^8.9 || ^9.1",
         "openeuropa/task-runner-drupal-project-symlink": "^1.0",
