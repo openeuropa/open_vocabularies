@@ -209,7 +209,7 @@ class VocabularyReferenceFormatterTest extends KernelTestBase {
 
     // The outside field wrapper contains the cache information returned by
     // the access checks.
-    $this->assertEquals([
+    $this->assertEqualsCanonicalizing([
       'contexts' => ['user.permissions'],
       'tags' => [
         'open_vocabularies_test_access_tag:1',
@@ -366,7 +366,7 @@ class VocabularyReferenceFormatterTest extends KernelTestBase {
 
     // All the access cache metadata is still present, even if countries will
     // not be rendered.
-    $this->assertEquals([
+    $this->assertEqualsCanonicalizing([
       'contexts' => ['user.permissions'],
       'tags' => [
         'open_vocabularies_test_access_tag:1',
