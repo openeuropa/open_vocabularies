@@ -1,11 +1,21 @@
 # Changelog
 
+## [1.0.0-alpha6](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha6) (2022-02-08)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha5...1.0.0-alpha6)
+
+**Merged pull requests:**
+
+- EWPP-1894: Update to PHP8. [\#34](https://github.com/openeuropa/open_vocabularies/pull/34) ([22Alexandra](https://github.com/22Alexandra))
+- EWPP-1432: Update field\_group module to 3.2 [\#32](https://github.com/openeuropa/open_vocabularies/pull/32) ([yenyasinn](https://github.com/yenyasinn))
+
 ## [1.0.0-alpha5](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha5) (2021-09-27)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha4...1.0.0-alpha5)
 
 **Merged pull requests:**
 
+- Release-1.0.0-alpha5: Update changelog. [\#33](https://github.com/openeuropa/open_vocabularies/pull/33) ([nagyad](https://github.com/nagyad))
 - EWPP-1246: Unexpected configuration gets persisted when switching between vocabulary reference plugins. [\#29](https://github.com/openeuropa/open_vocabularies/pull/29) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha4](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha4) (2021-08-16)
