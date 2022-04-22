@@ -89,6 +89,8 @@ function open_vocabularies_entity_access(EntityInterface $entity, $operation, Ac
     return $access;
   }
 
+  // @todo Load assocations by fields that are used when
+  // https://www.drupal.org/project/drupal/issues/2248567 is fixed.
   $associations = \Drupal::entityTypeManager()->getStorage('open_vocabulary_association')->loadMultiple();
   foreach ($associations as $association) {
     // Vocabulary association uses the field from the entity - add

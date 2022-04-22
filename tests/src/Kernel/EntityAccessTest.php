@@ -13,7 +13,7 @@ use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
- * Tests the computed field item list class.
+ * Tests the access to the entity after adding vocabulary association.
  *
  * @group open_vocabularies
  */
@@ -40,6 +40,7 @@ class EntityAccessTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installConfig([
