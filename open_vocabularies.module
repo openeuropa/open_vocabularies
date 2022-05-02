@@ -7,13 +7,10 @@
 
 declare(strict_types = 1);
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\open_vocabularies\VocabularyReferenceFieldsManager;
 
 /**
@@ -58,47 +55,4 @@ function open_vocabularies_form_alter(&$form, FormStateInterface $form_state, $f
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(VocabularyReferenceFieldsManager::class)
     ->alterFieldGroups($form, $form_state);
-}
-
-/**
- * Implements hook_entity_access().
- */
-function open_vocabularies_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  $access = AccessResult::neutral();
-
-  if ($operation !== 'view') {
-    return $access;
-  }
-
-  // Find the open_vocabulary_reference fields in the entity.
-  $field_map = \Drupal::service('entity_field.manager')->getFieldMapByFieldType('open_vocabulary_reference');
-  $entity_type_id = $entity->getEntityTypeId();
-  if (!isset($field_map[$entity_type_id])) {
-    return $access;
-  }
-
-  $fields = [];
-  foreach ($field_map[$entity_type_id] as $field_name => $data) {
-    $bundle = $entity->bundle();
-    if (in_array($entity->bundle(), $data['bundles'])) {
-      $fields[] = "$entity_type_id.$bundle.$field_name";
-    }
-  }
-
-  if (empty($fields)) {
-    return $access;
-  }
-
-  // @todo Load assocations by fields that are used when
-  // https://www.drupal.org/project/drupal/issues/2248567 is fixed.
-  $associations = \Drupal::entityTypeManager()->getStorage('open_vocabulary_association')->loadMultiple();
-  foreach ($associations as $association) {
-    // Vocabulary association uses the field from the entity - add
-    // association as the cache dependency.
-    if (!empty(array_intersect($fields, $association->get('fields')))) {
-      $access->addCacheableDependency($association);
-    }
-  }
-
-  return $access;
 }

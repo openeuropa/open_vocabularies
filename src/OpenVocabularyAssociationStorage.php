@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\open_vocabularies;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
@@ -159,6 +160,18 @@ class OpenVocabularyAssociationStorage extends ConfigEntityStorage implements Op
    */
   protected function doDelete($entities) {
     parent::doDelete($entities);
+
+    // Invalidate cache for all entity types affected.
+    // We need to do this to guarantee entity lists are
+    // correctly expired when associations are removed.
+    foreach ($entities as $entity) {
+      $fields = $entity->getFields();
+      foreach ($fields as $field) {
+        [$entity_type_id, $bundle, $field_id] = explode('.', $field);
+        $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+        Cache::invalidateTags($entity_type->getListCacheTags());
+      }
+    }
 
     $this->entityFieldManager->clearCachedFieldDefinitions();
   }
