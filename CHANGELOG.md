@@ -1,11 +1,20 @@
 # Changelog
 
+## [1.0.0-alpha7](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha7) (2022-06-21)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha6...1.0.0-alpha7)
+
+**Merged pull requests:**
+
+- EWPP-2193: Fix dependency from composer patches. [\#37](https://github.com/openeuropa/open_vocabularies/pull/37) ([yenyasinn](https://github.com/yenyasinn))
+
 ## [1.0.0-alpha6](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha6) (2022-02-08)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha5...1.0.0-alpha6)
 
 **Merged pull requests:**
 
+- EWPP-0000: Prepare for 1.0.0-alpha6 release. [\#35](https://github.com/openeuropa/open_vocabularies/pull/35) ([hernani](https://github.com/hernani))
 - EWPP-1894: Update to PHP8. [\#34](https://github.com/openeuropa/open_vocabularies/pull/34) ([22Alexandra](https://github.com/22Alexandra))
 - EWPP-1432: Update field\_group module to 3.2 [\#32](https://github.com/openeuropa/open_vocabularies/pull/32) ([yenyasinn](https://github.com/yenyasinn))
 
