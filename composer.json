@@ -8,16 +8,15 @@
     "require": {
         "php": ">=7.4",
         "cweagans/composer-patches": "~1.4",
-        "drupal/core": "^9.2"
+        "drupal/core": "^9.3"
     },
     "require-dev": {
         "composer/installers": "^1.11",
-        "drupal/core-composer-scaffold": "^9.2",
-        "drupal/core-dev": "^9.2",
+        "drupal/core-composer-scaffold": "^9.3",
+        "drupal/core-dev": "^9.3",
         "drupal/config_devel": "~1.2",
         "drupal/drupal-extension": "^4.1",
         "drush/drush": "^10.3",
-        "egulias/email-validator": "^2.1.22 || ^3.0",
         "drupal/field_group": "^3.2",
         "openeuropa/code-review": "^2.0",
         "openeuropa/task-runner-drupal-project-symlink": "^1.0-beta5",
@@ -25,8 +24,7 @@
         "symfony/dom-crawler": "^4.4.12"
     },
     "_readme": [
-        "Explicit minimum version requirement for symfony/dom-crawler due to its lower versions using the deprecated function libxml_disable_entity_loader() in PHP8.",
-        "Explicit requirement for egulias/email-validator due to https://www.drupal.org/project/drupal/issues/3061074#comment-14300579. It can be removed when Drupal core 9.2 support is droppped."
+        "Explicit minimum version requirement for symfony/dom-crawler due to its lower versions using the deprecated function libxml_disable_entity_loader() in PHP8."
     ],
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
