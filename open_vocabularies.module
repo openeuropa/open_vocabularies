@@ -14,6 +14,24 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\open_vocabularies\VocabularyReferenceFieldsManager;
 
 /**
+ * Implements hook_module_implements_alter().
+ *
+ * We need to run our form_alter method after the one from field_group.
+ *
+ * @see open_vocabularies_form_alter
+ */
+function open_vocabularies_module_implements_alter(&$implementations, $hook) {
+  $hooks = [
+    'form_alter',
+  ];
+  if (in_array($hook, $hooks)) {
+    $group = $implementations['open_vocabularies'];
+    unset($implementations['open_vocabularies']);
+    $implementations['open_vocabularies'] = $group;
+  }
+}
+
+/**
  * Implements hook_entity_bundle_field_info_alter().
  */
 function open_vocabularies_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
