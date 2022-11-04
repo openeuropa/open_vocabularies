@@ -1,11 +1,20 @@
 # Changelog
 
-## [1.0.0-alpha8](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha8) (2022-07-29)
+## [1.0.0-alpha9](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha9) (2022-11-04)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha8...1.0.0-alpha9)
+
+**Merged pull requests:**
+
+- EWPP-2625: Run form\_alter hook after field\_group. [\#41](https://github.com/openeuropa/open_vocabularies/pull/41) ([imanoleguskiza](https://github.com/imanoleguskiza))
+
+## [1.0.0-alpha8](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha8) (2022-08-02)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha7...1.0.0-alpha8)
 
 **Merged pull requests:**
 
+- Prepare release 1.0.0-alpha8. [\#40](https://github.com/openeuropa/open_vocabularies/pull/40) ([imanoleguskiza](https://github.com/imanoleguskiza))
 - EWPP-2358: Drupal 9.4 support. [\#38](https://github.com/openeuropa/open_vocabularies/pull/38) ([yenyasinn](https://github.com/yenyasinn))
 
 ## [1.0.0-alpha7](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha7) (2022-06-22)
