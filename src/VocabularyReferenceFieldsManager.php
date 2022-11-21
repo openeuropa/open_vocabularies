@@ -223,7 +223,7 @@ class VocabularyReferenceFieldsManager implements ContainerInjectionInterface {
       $vocabulary = $vocabulary_storage->load($association->getVocabulary());
       $plugin = $this->referenceHandlerManager->getDefinition($vocabulary->getHandler());
 
-      // Generate an unique name for the field. Prevent long names by generating
+      // Generate a unique name for the field. Prevent long names by generating
       // a hashed and truncated suffix.
       $field_name = $association->getName() . '_' . substr(hash('sha256', $reference_field->getName()), 0, 10);
       $fields[$field_name] = BaseFieldDefinition::create('entity_reference')
