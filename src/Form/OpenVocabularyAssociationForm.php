@@ -184,7 +184,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
         OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED => $this->t('Unlimited'),
       ],
       '#default_value' => ($entity->getCardinality() === OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED) ? OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED : 'number',
-      '#disabled' => !$entity->isNew(),
+      '#disabled' => $entity->getCardinality() === OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED,
     ];
 
     $form['cardinality_wrapper']['cardinality_number'] = [
@@ -425,7 +425,7 @@ class OpenVocabularyAssociationForm extends EntityForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->getValue('cardinality') != '-1' && $this->original->getCardinality() > $form_state->getValue('cardinality_number')) {
+    if ($form_state->getValue('cardinality') != OpenVocabularyAssociationInterface::CARDINALITY_UNLIMITED && $this->original->getCardinality() > $form_state->getValue('cardinality_number')) {
       $form_state->setErrorByName('cardinality_number', $this->t("Number of values can't be smaller than the previously set number: %value.", ['%value' => $this->original->getCardinality()]));
     }
   }

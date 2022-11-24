@@ -229,7 +229,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     // Edit the vocabulary association.
     $this->clickLink('Edit');
     $assert_session->fieldDisabled('Vocabulary');
-    $assert_session->fieldDisabled('Allowed number of values');
+    $assert_session->fieldEnabled('Allowed number of values');
     $assert_session->fieldEnabled('Limit');
     $this->getSession()->getPage()->fillField('Limit', 2);
     $assert_session->fieldValueEquals('Label', 'Association 1');
@@ -282,6 +282,10 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldDisabled('Beta');
     $this->getSession()->getPage()->pressButton('Save');
     $assert_session->pageTextContains('Number of values can\'t be smaller than the previously set number: 2.');
+    $this->getSession()->getPage()->selectFieldOption('Allowed number of values', 'Unlimited');
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->clickLink('Edit');
+    $this->assertSession()->fieldDisabled('Allowed number of values');
 
     // Tests the deletion form.
     $this->drupalGet('/admin/structure/open-vocabulary-association');
