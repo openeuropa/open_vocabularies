@@ -252,8 +252,9 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'target_bundle' => 'bundle_b',
     ], $definitions['association_two_94ab077978']);
 
-    // Change the label of an association.
-    $association_two->set('label', $this->randomString())->save();
+    // Change the label and the cardinality of an association.
+    $association_two->set('label', $this->randomString());
+    $association_two->set('cardinality', 2)->save();
 
     // Verify that the related field definitions have been updated.
     $definitions = $field_manager->getFieldDefinitions('entity_test_with_bundle', 'bundle_a');
@@ -261,7 +262,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'label' => $association_two->label(),
       'description' => '',
       'required' => FALSE,
-      'cardinality' => 1,
+      'cardinality' => 2,
       'settings' => [
         'target_type' => 'entity_test',
         'handler' => 'default',
@@ -279,7 +280,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
       'label' => $association_two->label(),
       'description' => '',
       'required' => FALSE,
-      'cardinality' => 1,
+      'cardinality' => 2,
       'settings' => [
         'target_type' => 'entity_test',
         'handler' => 'default',
