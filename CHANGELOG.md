@@ -1,11 +1,20 @@
 # Changelog
 
+## [1.0.0-alpha10](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha10) (2023-01-03)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha9...1.0.0-alpha10)
+
+**Merged pull requests:**
+
+- EWPP-2796: Allow higher number of allowed values for association. [\#43](https://github.com/openeuropa/open_vocabularies/pull/43) ([nagyad](https://github.com/nagyad))
+
 ## [1.0.0-alpha9](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha9) (2022-11-04)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha8...1.0.0-alpha9)
 
 **Merged pull requests:**
 
+- Prepare release 1.0.0-alpha9. [\#42](https://github.com/openeuropa/open_vocabularies/pull/42) ([imanoleguskiza](https://github.com/imanoleguskiza))
 - EWPP-2625: Run form\_alter hook after field\_group. [\#41](https://github.com/openeuropa/open_vocabularies/pull/41) ([imanoleguskiza](https://github.com/imanoleguskiza))
 
 ## [1.0.0-alpha8](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha8) (2022-08-02)
