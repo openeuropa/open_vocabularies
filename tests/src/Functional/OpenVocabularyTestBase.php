@@ -50,6 +50,7 @@ abstract class OpenVocabularyTestBase extends BrowserTestBase {
 
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
 
     $storage = FieldStorageConfig::create([
@@ -81,7 +82,10 @@ abstract class OpenVocabularyTestBase extends BrowserTestBase {
     ])->save();
 
     // Create bundles that will be used as referenced bundles.
-    EntityTestBundle::create(['id' => 'country'])->save();
+    EntityTestBundle::create([
+      'id' => 'country',
+      'label' => 'Country',
+    ])->save();
 
     // Create a vocabulary with two associations.
     $this->createVocabulary([
