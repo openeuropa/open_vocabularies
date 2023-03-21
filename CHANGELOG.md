@@ -1,11 +1,20 @@
 # Changelog
 
+## [1.0.0-alpha11](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha11) (2023-03-21)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha10...1.0.0-alpha11)
+
+**Merged pull requests:**
+
+- OEL-2115: Update to PHP 8.1 [\#45](https://github.com/openeuropa/open_vocabularies/pull/45) ([brummbar](https://github.com/brummbar))
+
 ## [1.0.0-alpha10](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha10) (2023-01-03)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha9...1.0.0-alpha10)
 
 **Merged pull requests:**
 
+- Prepare release 1.0.0-alpha10. [\#44](https://github.com/openeuropa/open_vocabularies/pull/44) ([imanoleguskiza](https://github.com/imanoleguskiza))
 - EWPP-2796: Allow higher number of allowed values for association. [\#43](https://github.com/openeuropa/open_vocabularies/pull/43) ([nagyad](https://github.com/nagyad))
 
 ## [1.0.0-alpha9](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha9) (2022-11-04)
