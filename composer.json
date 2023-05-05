@@ -11,12 +11,10 @@
         "drupal/core": "^9.4"
     },
     "require-dev": {
-        "behat/mink-selenium2-driver": "^1.5",
         "composer/installers": "^1.11",
         "drupal/core-composer-scaffold": "^9.4",
         "drupal/config_devel": "~1.2",
         "drupal/core-utility": "^9.4",
-        "drupal/drupal-extension": "dev-master as 4.0",
         "drush/drush": "^11.1",
         "drupal/field_group": "^3.2",
         "guzzlehttp/guzzle": "^7.0",
