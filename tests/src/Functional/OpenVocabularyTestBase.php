@@ -41,7 +41,7 @@ abstract class OpenVocabularyTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_actions_block');

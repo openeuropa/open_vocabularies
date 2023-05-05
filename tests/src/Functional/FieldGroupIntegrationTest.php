@@ -26,7 +26,7 @@ class FieldGroupIntegrationTest extends OpenVocabularyTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->createGroup('node', 'page', 'form', 'default', [

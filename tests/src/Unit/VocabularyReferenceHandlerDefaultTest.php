@@ -32,7 +32,7 @@ class VocabularyReferenceHandlerDefaultTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->selectionManager = $this->createMock('\Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface');

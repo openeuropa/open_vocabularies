@@ -28,7 +28,7 @@ class VocabularyReferenceItemTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'open_vocabularies',
     'open_vocabularies_test',
   ];
@@ -36,7 +36,7 @@ class VocabularyReferenceItemTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $storage = FieldStorageConfig::create([
