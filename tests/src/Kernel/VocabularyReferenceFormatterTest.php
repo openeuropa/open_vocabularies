@@ -52,12 +52,12 @@ class VocabularyReferenceFormatterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Use Classy theme for testing markup output.
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
 
     $this->installSchema('system', 'sequences');
     $this->installEntitySchema('user');

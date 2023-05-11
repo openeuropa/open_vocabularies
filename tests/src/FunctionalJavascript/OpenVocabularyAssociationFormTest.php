@@ -30,7 +30,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a field that has two instances in two bundles.

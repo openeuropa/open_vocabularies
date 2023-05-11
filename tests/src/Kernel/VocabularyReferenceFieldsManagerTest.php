@@ -29,7 +29,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'open_vocabularies',
     'open_vocabularies_test',
   ];
@@ -37,7 +37,7 @@ class VocabularyReferenceFieldsManagerTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_with_bundle');
