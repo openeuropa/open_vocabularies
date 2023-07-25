@@ -12,7 +12,7 @@ Once a content type is equipped with an open vocabulary field, users with approp
 
 This module unfortunately requires a patch to Drupal core 9.x releases, due to a bug that prevents placing the generated fields
 programmatically in the form display.\
-The patch is already included in this component composer.json. To have it installed, irst require the component needed to apply the patch:
+The patch is already included in this component composer.json. To have it installed, first require the component needed to apply the patch:
 ```bash
 composer require cweagans/composer-patches
 ```
