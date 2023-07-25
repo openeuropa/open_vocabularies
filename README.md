@@ -10,9 +10,9 @@ Once a content type is equipped with an open vocabulary field, users with approp
 
 # Requirements
 
-This module unfortunately requires a patch to Drupal core, due to a bug that prevents placing the generated fields
+This module unfortunately requires a patch to Drupal core 9.x releases, due to a bug that prevents placing the generated fields
 programmatically in the form display.\
-First require the component needed to apply the patch:
+The patch is already included in this component composer.json. To have it installed, first require the component needed to apply the patch:
 ```bash
 composer require cweagans/composer-patches
 ```
@@ -22,13 +22,15 @@ Then add in the `extra` section of your project `composer.json`:
   "extra": {
     "composer-exit-on-patch-failure": true,
     "enable-patching": true,
-    "patches": {
-      "drupal/core": {
-        "Entity display entities are incorrectly unserialized @see https://www.drupal.org/project/drupal/issues/3171333": "https://www.drupal.org/files/issues/2020-09-17/3171333-6.patch"
-      }
-    }
+    [...]
   }
   [...]
+```
+
+If you require this module in Drupal 10 you must set said patch as ignored in your composer.json.\
+You can do this with the following command:
+```bash
+composer config --merge --json "extra.patches-ignore.openeuropa/open_vocabularies" '{"drupal/core": {"Entity display entities are incorrectly unserialized @see https://www.drupal.org/project/drupal/issues/3171333": "https://www.drupal.org/files/issues/2020-09-17/3171333-6.patch"}}'
 ```
 
 ## Development setup

@@ -35,6 +35,17 @@ services:
       - NODE_MAX_SESSION=5
 
 pipeline:
+  composer-drop-patch:
+    group: warmup
+    image: registry.fpfis.eu/fpfis/httpd-php:${PHP_VERSION}-ci
+    volumes:
+      - /cache:/cache
+    commands:
+      # Drop Drupal patch that is needed only for 9.x.
+      - composer config --unset --json "extra.patches.drupal/core"
+    when:
+      matrix:
+        CORE_VERSION: "10.0"
   composer-install:
     group: prepare
     image: registry.fpfis.eu/fpfis/httpd-php:${PHP_VERSION}-ci
@@ -71,9 +82,9 @@ pipeline:
 
 matrix:
   include:
-    - CORE_VERSION: 9.4.0
+    - CORE_VERSION: 9.5.0
       PHP_VERSION: 8.0
-    - CORE_VERSION: 9.4.0
+    - CORE_VERSION: 9.5.0
       PHP_VERSION: 8.1
     - CORE_VERSION: 10.0
       PHP_VERSION: 8.1
