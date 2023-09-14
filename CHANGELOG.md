@@ -1,13 +1,24 @@
-# Change Log
+# Changelog
+
+## [1.0.0-beta1](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta1) (2023-09-14)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha12...1.0.0-beta1)
+
+**Merged pull requests:**
+
+- EWPP-3457: Update core patch information. [\#49](https://github.com/openeuropa/open_vocabularies/pull/49) ([sergepavle](https://github.com/sergepavle))
 
 ## [1.0.0-alpha12](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha12) (2023-05-11)
+
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha11...1.0.0-alpha12)
 
 **Merged pull requests:**
 
+- Prepare changelog for release 1.0.0-alpha12. [\#48](https://github.com/openeuropa/open_vocabularies/pull/48) ([brummbar](https://github.com/brummbar))
 - EWPP-2966: Drupal 10 compatibility. [\#47](https://github.com/openeuropa/open_vocabularies/pull/47) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha11](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha11) (2023-03-21)
+
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha10...1.0.0-alpha11)
 
 **Merged pull requests:**
@@ -16,6 +27,7 @@
 - OEL-2115: Update to PHP 8.1 [\#45](https://github.com/openeuropa/open_vocabularies/pull/45) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha10](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha10) (2023-01-03)
+
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha9...1.0.0-alpha10)
 
 **Merged pull requests:**
