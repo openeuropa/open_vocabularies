@@ -292,21 +292,13 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->buttonExists('List additional actions')->press();
     $this->clickLink('Delete');
 
-    // Drupal 10 introduces modals for all delete operations.
-    if (version_compare(\Drupal::VERSION, '10.0.0') >= 0) {
-      $this->assertEquals(
-        'Are you sure you want to delete the vocabulary association Association 1?',
-        $assert_session->waitForElement('css', '.ui-dialog-title')->getText()
-      );
-      $form_actions = $assert_session->elementExists('css', '.ui-dialog-buttonset');
-      $assert_session->buttonExists('Cancel', $form_actions);
-      $assert_session->buttonExists('Delete', $form_actions)->press();
-    }
-    else {
-      $assert_session->pageTextContainsOnce('Are you sure you want to delete the vocabulary association Association 1?');
-      $assert_session->linkExists('Cancel');
-      $assert_session->buttonExists('Delete')->press();
-    }
+    $this->assertEquals(
+      'Are you sure you want to delete the vocabulary association Association 1?',
+      $assert_session->waitForElement('css', '.ui-dialog-title')->getText()
+    );
+    $form_actions = $assert_session->elementExists('css', '.ui-dialog-buttonset');
+    $assert_session->buttonExists('Cancel', $form_actions);
+    $assert_session->buttonExists('Delete', $form_actions)->press();
 
     $assert_session->pageTextContains('The vocabulary association Association 1 has been deleted.');
   }
