@@ -1,11 +1,20 @@
 # Changelog
 
-## [1.0.0-beta1](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta1) (2023-09-14)
+## [1.0.0-beta2](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta2) (2024-02-14)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-beta1...1.0.0-beta2)
+
+**Merged pull requests:**
+
+- EWPP-3968: Add Drupal 10.2.x and PHP 8.2 to matrix. [\#51](https://github.com/openeuropa/open_vocabularies/pull/51) ([brummbar](https://github.com/brummbar))
+
+## [1.0.0-beta1](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta1) (2023-09-18)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha12...1.0.0-beta1)
 
 **Merged pull requests:**
 
+- Prepare release 1.0.0-beta1. [\#50](https://github.com/openeuropa/open_vocabularies/pull/50) ([imanoleguskiza](https://github.com/imanoleguskiza))
 - EWPP-3457: Update core patch information. [\#49](https://github.com/openeuropa/open_vocabularies/pull/49) ([sergepavle](https://github.com/sergepavle))
 
 ## [1.0.0-alpha12](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha12) (2023-05-11)
