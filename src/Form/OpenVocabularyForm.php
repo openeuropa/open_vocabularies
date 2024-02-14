@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\open_vocabularies\Form;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\Element;
 use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -103,7 +103,7 @@ class OpenVocabularyForm extends EntityForm {
       '#tree' => TRUE,
       '#type' => 'container',
       '#id' => 'vocabulary-handler-settings-wrapper',
-      '#process' => [[EntityReferenceItem::class, 'fieldSettingsAjaxProcess']],
+      '#process' => [[static::class, 'fieldSettingsAjaxProcess']],
       '#element_validate' => ['::validateSelectionPluginHandlerConfiguration'],
       // The selection handlers expect the form elements to be under a specific
       // array key.
@@ -219,6 +219,50 @@ class OpenVocabularyForm extends EntityForm {
 
     $vocabulary_handler = $this->referenceHandlerManager->createInstance($handler_id);
     $vocabulary_handler->getHandler()->validateConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * Ajax callback for the handler settings form.
+   *
+   * Copied from \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::settingsAjax()
+   * version 10.1. In 10.2 the callback was reworked and doesn't apply anymore
+   * to our form.
+   */
+  public static function settingsAjax($form, FormStateInterface $form_state) {
+    return NestedArray::getValue($form, $form_state->getTriggeringElement()['#ajax']['element']);
+  }
+
+  /**
+   * Render API callback: Processes the field settings form.
+   *
+   * Copied from \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcess()
+   * version 10.1. In 10.2 the callback was reworked and doesn't apply anymore
+   * to our form.
+   */
+  public static function fieldSettingsAjaxProcess($form, FormStateInterface $form_state) {
+    static::fieldSettingsAjaxProcessElement($form, $form);
+    return $form;
+  }
+
+  /**
+   * Adds the field settings to AJAX form elements.
+   *
+   * Copied from \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcessElement()
+   * version 10.1. In 10.2 the callback was reworked and doesn't apply anymore
+   * to our form.
+   */
+  public static function fieldSettingsAjaxProcessElement(&$element, $main_form) {
+    if (!empty($element['#ajax'])) {
+      $element['#ajax'] = [
+        'callback' => [static::class, 'settingsAjax'],
+        'wrapper' => $main_form['#id'],
+        'element' => $main_form['#array_parents'],
+      ];
+    }
+
+    foreach (Element::children($element) as $key) {
+      static::fieldSettingsAjaxProcessElement($element[$key], $main_form);
+    }
   }
 
   /**

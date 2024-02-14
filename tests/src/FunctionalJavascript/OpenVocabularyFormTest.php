@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
@@ -220,12 +220,6 @@ class OpenVocabularyFormTest extends OpenVocabulariesFormTestBase {
         'direction' => 'ASC',
       ],
     ];
-    // For Drupal versions earlier than 9.1.x, the direction form element is not
-    // rendered when no field is selected. So the direction value is not
-    // submitted and not present in the saved configuration.
-    if (version_compare(\Drupal::VERSION, '9.1', '<')) {
-      unset($expected['sort']['direction']);
-    }
     $this->assertEquals($expected, $vocabulary->getHandlerSettings());
 
     // Create an association that targets this vocabulary.

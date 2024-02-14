@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
@@ -187,7 +187,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
       'Unlimited',
     ], array_values($this->getOptions('Allowed number of values')));
     $assert_session->fieldValueEquals('Allowed number of values', 'number');
-    $assert_session->fieldValueEquals('Limit', 1);
+    $assert_session->fieldValueEquals('Limit', '1');
 
     // Test the cardinality states.
     $this->getSession()->getPage()->selectFieldOption('Allowed number of values', 'Unlimited');
@@ -231,7 +231,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->fieldDisabled('Vocabulary');
     $assert_session->fieldEnabled('Allowed number of values');
     $assert_session->fieldEnabled('Limit');
-    $this->getSession()->getPage()->fillField('Limit', 2);
+    $this->getSession()->getPage()->fillField('Limit', '2');
     $assert_session->fieldValueEquals('Label', 'Association 1');
     $assert_session->fieldValueEquals('Widget type', 'options_select');
     $assert_session->fieldValueEquals('Vocabulary', $vocabulary->id());
@@ -271,7 +271,7 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $this->clickLink('Edit');
     $this->getSession()->getPage()->checkField($label_second_alpha_field);
     $this->getSession()->getPage()->pressButton('Test rebuild');
-    $this->getSession()->getPage()->fillField('Limit', 1);
+    $this->getSession()->getPage()->fillField('Limit', '1');
     $assert_session->checkboxChecked('Entity Test Bundle');
     $assert_session->fieldDisabled($label_first_alpha_field);
     $assert_session->checkboxChecked($label_first_alpha_field);
@@ -292,21 +292,13 @@ class OpenVocabularyAssociationFormTest extends OpenVocabulariesFormTestBase {
     $assert_session->buttonExists('List additional actions')->press();
     $this->clickLink('Delete');
 
-    // Drupal 10 introduces modals for all delete operations.
-    if (version_compare(\Drupal::VERSION, '10.0.0') >= 0) {
-      $this->assertEquals(
-        'Are you sure you want to delete the vocabulary association Association 1?',
-        $assert_session->waitForElement('css', '.ui-dialog-title')->getText()
-      );
-      $form_actions = $assert_session->elementExists('css', '.ui-dialog-buttonset');
-      $assert_session->buttonExists('Cancel', $form_actions);
-      $assert_session->buttonExists('Delete', $form_actions)->press();
-    }
-    else {
-      $assert_session->pageTextContainsOnce('Are you sure you want to delete the vocabulary association Association 1?');
-      $assert_session->linkExists('Cancel');
-      $assert_session->buttonExists('Delete')->press();
-    }
+    $this->assertEquals(
+      'Are you sure you want to delete the vocabulary association Association 1?',
+      $assert_session->waitForElement('css', '.ui-dialog-title')->getText()
+    );
+    $form_actions = $assert_session->elementExists('css', '.ui-dialog-buttonset');
+    $assert_session->buttonExists('Cancel', $form_actions);
+    $assert_session->buttonExists('Delete', $form_actions)->press();
 
     $assert_session->pageTextContains('The vocabulary association Association 1 has been deleted.');
   }
