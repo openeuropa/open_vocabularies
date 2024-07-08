@@ -228,6 +228,10 @@ class VocabularyReferenceItemTest extends FieldKernelTestBase {
       ->willReturnCallback(function (string $entity_type_id) use ($entity_type_manager, $mock_storage): EntityStorageInterface {
         return $entity_type_id === 'open_vocabulary' ? $mock_storage : $entity_type_manager->getStorage($entity_type_id);
       });
+    $mock_entity_manager
+      ->method('getDefinitions')
+      ->willReturn($entity_type_manager->getDefinitions());
+
     $this->container->set('entity_type.manager', $mock_entity_manager);
 
     // Test that null is returned on non-existing vocabularies.
