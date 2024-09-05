@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\Functional;
 
+use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
@@ -63,6 +66,36 @@ class OpenVocabularyAssociationAdminTest extends BrowserTestBase {
    * Tests the vocabulary association list builder table.
    */
   public function testVocabularyAssociationListBuilder(): void {
+    $storage = FieldStorageConfig::create([
+      'field_name' => 'vocabulary_reference',
+      'entity_type' => 'entity_test',
+      'type' => 'open_vocabulary_reference',
+    ]);
+    $storage->save();
+    FieldConfig::create([
+      'field_storage' => $storage,
+      'bundle' => 'entity_test',
+      'label' => 'Vocabularies',
+    ])->save();
+    EntityTestBundle::create(['id' => 'test_a', 'label' => 'Test bundle A'])->save();
+    EntityTestBundle::create(['id' => 'test_b', 'label' => 'Test bundle B'])->save();
+    $storage = FieldStorageConfig::create([
+      'field_name' => 'vocabulary_reference',
+      'entity_type' => 'entity_test_with_bundle',
+      'type' => 'open_vocabulary_reference',
+    ]);
+    $storage->save();
+    FieldConfig::create([
+      'field_storage' => $storage,
+      'bundle' => 'test_a',
+      'label' => 'Vocabularies',
+    ])->save();
+    FieldConfig::create([
+      'field_storage' => $storage,
+      'bundle' => 'test_b',
+      'label' => 'Vocabularies',
+    ])->save();
+
     // Log in as a user with the administration permission.
     $this->drupalLogin($this->drupalCreateUser([
       'administer open vocabulary associations',
@@ -73,13 +106,14 @@ class OpenVocabularyAssociationAdminTest extends BrowserTestBase {
 
     $table = $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
     $headers = $table->findAll('xpath', '/thead/tr/th');
-    $this->assertCount(6, $headers);
+    $this->assertCount(7, $headers);
 
     $expected_headers = [
       'Label',
       'Machine name',
       'Widget type',
       'Vocabulary',
+      'Entity types',
       'Weight',
       'Operations',
     ];
@@ -99,6 +133,9 @@ class OpenVocabularyAssociationAdminTest extends BrowserTestBase {
       'vocabulary' => $vocabulary->id(),
       'name' => 'association_0',
       'widget_type' => 'options_select',
+      'fields' => [
+        'entity_test.entity_test.open_vocabulary_reference',
+      ],
     ];
     $association = OpenVocabularyAssociation::create($values);
     $association->save();
@@ -106,6 +143,10 @@ class OpenVocabularyAssociationAdminTest extends BrowserTestBase {
 
     $values['label'] = 'Association 1';
     $values['name'] = 'association_1';
+    $values['fields'] = [
+      'entity_test_with_bundle.test_a.open_vocabulary_reference',
+      'entity_test_with_bundle.test_b.open_vocabulary_reference',
+    ];
     $association = OpenVocabularyAssociation::create($values);
     $association->save();
     $associations[] = $association;
@@ -122,11 +163,17 @@ class OpenVocabularyAssociationAdminTest extends BrowserTestBase {
       $this->assertEquals('association_' . $row, $cells[1]->getText());
       $this->assertEquals('Select list', $cells[2]->getText());
       $this->assertEquals($vocabulary->label(), $cells[3]->getText());
+      if ($row === 0) {
+        $this->assertEquals('Test entity', $cells[4]->getText());
+      }
+      if ($row === 1) {
+        $this->assertEquals('Test entity with bundle: Test bundle A, Test bundle B', $cells[4]->getText());
+      }
       // Assert the weight value which in the beginning is the same as the row
       // number.
       $this->assertEquals($row, $this->getSession()->getPage()->findField('entities[' . $associations[$row]->id() . '][weight]')->getValue());
-      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('edit-form')->toString() . '")]', $cells[5]);
-      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('delete-form')->toString() . '")]', $cells[5]);
+      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('edit-form')->toString() . '")]', $cells[6]);
+      $this->assertSession()->elementExists('xpath', '//a[starts-with(@href, "' . $associations[$row]->toUrl('delete-form')->toString() . '")]', $cells[6]);
     }
 
     // Re-order the associations and assert the order has changed.
