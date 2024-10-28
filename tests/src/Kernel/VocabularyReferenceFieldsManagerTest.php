@@ -7,6 +7,8 @@ namespace Drupal\Tests\open_vocabularies\Kernel;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
@@ -14,8 +16,6 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\Entity\OpenVocabulary;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
 use Drupal\open_vocabularies\Plugin\Field\ComputedVocabularyReferenceFieldItemList;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the hooks implemented by the fields manager class.

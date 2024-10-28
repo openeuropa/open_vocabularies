@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\Kernel;
 
+use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Tests the item list of open_vocabulary_reference fields.

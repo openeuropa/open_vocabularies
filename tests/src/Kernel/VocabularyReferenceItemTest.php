@@ -7,14 +7,14 @@ namespace Drupal\Tests\open_vocabularies\Kernel;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\Plugin\Field\FieldType\VocabularyReferenceItem;
 use Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList;
 use Drupal\open_vocabularies\VocabularyReferenceHandlerPluginManagerInterface;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the open_vocabulary_reference field type.

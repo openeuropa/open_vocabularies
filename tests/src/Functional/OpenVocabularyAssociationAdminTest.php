@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the administration side of open vocabulary association entities.

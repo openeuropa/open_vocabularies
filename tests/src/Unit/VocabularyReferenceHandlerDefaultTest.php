@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\open_vocabularies\Unit;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\open_vocabularies\VocabularyReferenceHandlerDefault;
 use Drupal\Tests\UnitTestCase;
+use Drupal\open_vocabularies\VocabularyReferenceHandlerDefault;
 
 /**
  * Tests the vocabulary reference handler default plugin.

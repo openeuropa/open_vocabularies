@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
-use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\entity_test\Entity\EntityTestBundle;
 
 /**
  * Tests the open vocabulary entity forms.

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
+use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
-use Drupal\Tests\open_vocabularies\Traits\NativeBrowserValidationTrait;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Tests the open vocabulary association entity forms.

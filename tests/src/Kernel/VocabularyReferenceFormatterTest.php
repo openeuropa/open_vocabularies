@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\open_vocabularies\Kernel;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\open_vocabularies\Entity\OpenVocabularyAssociation;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\DomCrawler\Crawler;

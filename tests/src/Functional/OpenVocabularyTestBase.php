@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\open_vocabularies\OpenVocabularyAssociationInterface;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\open_vocabularies\Traits\VocabularyTestTrait;
 
 /**
  * Base class for browser tests that need a set of pre-created data.
