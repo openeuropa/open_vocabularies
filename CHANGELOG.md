@@ -1,11 +1,22 @@
 # Changelog
 
+## [1.0.0](https://github.com/openeuropa/open_vocabularies/tree/1.0.0) (2024-10-28)
+
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-beta2...1.0.0)
+
+**Merged pull requests:**
+
+- Release-1.0.0: Fix phpcs issues. [\#56](https://github.com/openeuropa/open_vocabularies/pull/56) ([nagyad](https://github.com/nagyad))
+- EWPP-4587: Add the entity type bundle info to the association table. [\#54](https://github.com/openeuropa/open_vocabularies/pull/54) ([nagyad](https://github.com/nagyad))
+- OEL-3049: Update to Drupal 10.3 [\#53](https://github.com/openeuropa/open_vocabularies/pull/53) ([AaronGilMartinez](https://github.com/AaronGilMartinez))
+
 ## [1.0.0-beta2](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta2) (2024-02-14)
 
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-beta1...1.0.0-beta2)
 
 **Merged pull requests:**
 
+- Release-1.0.0-beta2: Update changelog. [\#52](https://github.com/openeuropa/open_vocabularies/pull/52) ([nagyad](https://github.com/nagyad))
 - EWPP-3968: Add Drupal 10.2.x and PHP 8.2 to matrix. [\#51](https://github.com/openeuropa/open_vocabularies/pull/51) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-beta1](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta1) (2023-09-18)
