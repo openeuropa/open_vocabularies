@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\open_vocabularies\FunctionalJavascript;
 
-use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\entity_test\Entity\EntityTestBundle;
 
 /**
  * Base test class for the open vocabularies form tests.
