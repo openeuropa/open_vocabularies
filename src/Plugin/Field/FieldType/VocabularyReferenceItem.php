@@ -56,6 +56,7 @@ class VocabularyReferenceItem extends FieldItemBase {
    */
   public function isEmpty() {
     // The item is not considered empty only when both targets are not null.
+    // @phpstan-ignore-next-line
     if ($this->target_id !== NULL && $this->target_association_id !== NULL) {
       return FALSE;
     }
@@ -128,6 +129,7 @@ class VocabularyReferenceItem extends FieldItemBase {
    */
   public function onChange($property_name, $notify = TRUE) {
     if ($property_name === 'target_association_id') {
+      // @phpstan-ignore-next-line
       $this->writePropertyValue('association', $this->target_association_id);
       // @todo reset $this->get('entity')->getTargetDefinition()->setEntityTypeId()?
       //   since the possible target entity type is changed?
@@ -138,6 +140,7 @@ class VocabularyReferenceItem extends FieldItemBase {
       // Avoid errors from non-set entity type by setting it to empty string.
       // @see \Drupal\Core\Entity\Plugin\DataType\EntityReference::setValue()
       $this->get('entity')->getTargetDefinition()->setEntityTypeId('');
+      // @phpstan-ignore-next-line
       $this->writePropertyValue('entity', $this->target_id);
     }
 
