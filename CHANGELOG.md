@@ -1,17 +1,23 @@
-# Changelog
+# Change Log
+
+## [1.1.0](https://github.com/openeuropa/open_vocabularies/tree/1.1.0) (2025-01-28)
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0...1.1.0)
+
+**Merged pull requests:**
+
+- EWPP-4991: Ensure PHP8.3 compatibility. [\#57](https://github.com/openeuropa/open_vocabularies/pull/57) ([nagyad](https://github.com/nagyad))
 
 ## [1.0.0](https://github.com/openeuropa/open_vocabularies/tree/1.0.0) (2024-10-28)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-beta2...1.0.0)
 
 **Merged pull requests:**
 
 - Release-1.0.0: Fix phpcs issues. [\#56](https://github.com/openeuropa/open_vocabularies/pull/56) ([nagyad](https://github.com/nagyad))
+- Release-1.0.0: Update changelog. [\#55](https://github.com/openeuropa/open_vocabularies/pull/55) ([nagyad](https://github.com/nagyad))
 - EWPP-4587: Add the entity type bundle info to the association table. [\#54](https://github.com/openeuropa/open_vocabularies/pull/54) ([nagyad](https://github.com/nagyad))
 - OEL-3049: Update to Drupal 10.3 [\#53](https://github.com/openeuropa/open_vocabularies/pull/53) ([AaronGilMartinez](https://github.com/AaronGilMartinez))
 
 ## [1.0.0-beta2](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta2) (2024-02-14)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-beta1...1.0.0-beta2)
 
 **Merged pull requests:**
@@ -20,7 +26,6 @@
 - EWPP-3968: Add Drupal 10.2.x and PHP 8.2 to matrix. [\#51](https://github.com/openeuropa/open_vocabularies/pull/51) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-beta1](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-beta1) (2023-09-18)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha12...1.0.0-beta1)
 
 **Merged pull requests:**
@@ -29,7 +34,6 @@
 - EWPP-3457: Update core patch information. [\#49](https://github.com/openeuropa/open_vocabularies/pull/49) ([sergepavle](https://github.com/sergepavle))
 
 ## [1.0.0-alpha12](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha12) (2023-05-11)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha11...1.0.0-alpha12)
 
 **Merged pull requests:**
@@ -38,7 +42,6 @@
 - EWPP-2966: Drupal 10 compatibility. [\#47](https://github.com/openeuropa/open_vocabularies/pull/47) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha11](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha11) (2023-03-21)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha10...1.0.0-alpha11)
 
 **Merged pull requests:**
@@ -47,7 +50,6 @@
 - OEL-2115: Update to PHP 8.1 [\#45](https://github.com/openeuropa/open_vocabularies/pull/45) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha10](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha10) (2023-01-03)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha9...1.0.0-alpha10)
 
 **Merged pull requests:**
@@ -56,7 +58,6 @@
 - EWPP-2796: Allow higher number of allowed values for association. [\#43](https://github.com/openeuropa/open_vocabularies/pull/43) ([nagyad](https://github.com/nagyad))
 
 ## [1.0.0-alpha9](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha9) (2022-11-04)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha8...1.0.0-alpha9)
 
 **Merged pull requests:**
@@ -65,7 +66,6 @@
 - EWPP-2625: Run form\_alter hook after field\_group. [\#41](https://github.com/openeuropa/open_vocabularies/pull/41) ([imanoleguskiza](https://github.com/imanoleguskiza))
 
 ## [1.0.0-alpha8](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha8) (2022-08-02)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha7...1.0.0-alpha8)
 
 **Merged pull requests:**
@@ -74,7 +74,6 @@
 - EWPP-2358: Drupal 9.4 support. [\#38](https://github.com/openeuropa/open_vocabularies/pull/38) ([yenyasinn](https://github.com/yenyasinn))
 
 ## [1.0.0-alpha7](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha7) (2022-06-22)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha6...1.0.0-alpha7)
 
 **Merged pull requests:**
@@ -83,7 +82,6 @@
 - EWPP-2193: Fix dependency from composer patches. [\#37](https://github.com/openeuropa/open_vocabularies/pull/37) ([yenyasinn](https://github.com/yenyasinn))
 
 ## [1.0.0-alpha6](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha6) (2022-02-08)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha5...1.0.0-alpha6)
 
 **Merged pull requests:**
@@ -93,7 +91,6 @@
 - EWPP-1432: Update field\_group module to 3.2 [\#32](https://github.com/openeuropa/open_vocabularies/pull/32) ([yenyasinn](https://github.com/yenyasinn))
 
 ## [1.0.0-alpha5](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha5) (2021-09-27)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha4...1.0.0-alpha5)
 
 **Merged pull requests:**
@@ -102,7 +99,6 @@
 - EWPP-1246: Unexpected configuration gets persisted when switching between vocabulary reference plugins. [\#29](https://github.com/openeuropa/open_vocabularies/pull/29) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha4](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha4) (2021-08-16)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha3...1.0.0-alpha4)
 
 **Merged pull requests:**
@@ -113,7 +109,6 @@
 - EWPP-721: Update xdebug configuration. [\#22](https://github.com/openeuropa/open_vocabularies/pull/22) ([22Alexandra](https://github.com/22Alexandra))
 
 ## [1.0.0-alpha3](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha3) (2021-03-19)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha2...1.0.0-alpha3)
 
 **Merged pull requests:**
@@ -123,7 +118,6 @@
 - EWPP-0000: Properly inject services. [\#24](https://github.com/openeuropa/open_vocabularies/pull/24) ([brummbar](https://github.com/brummbar))
 
 ## [1.0.0-alpha2](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha2) (2021-03-11)
-
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0-alpha1...1.0.0-alpha2)
 
 **Merged pull requests:**
@@ -137,9 +131,6 @@
 - EWPP-516: Update docker images. [\#17](https://github.com/openeuropa/open_vocabularies/pull/17) ([22Alexandra](https://github.com/22Alexandra))
 
 ## [1.0.0-alpha1](https://github.com/openeuropa/open_vocabularies/tree/1.0.0-alpha1) (2020-10-07)
-
-[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/2e2198fb3ee0ec22e4ed71381ec343638d88ebae...1.0.0-alpha1)
-
 **Merged pull requests:**
 
 - Generate CHANGELOG.md for release 1.0.0-alpha1. [\#15](https://github.com/openeuropa/open_vocabularies/pull/15) ([ademarco](https://github.com/ademarco))
@@ -157,4 +148,4 @@
 
 
 
-\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*
+\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
