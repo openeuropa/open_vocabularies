@@ -5,26 +5,27 @@ declare(strict_types=1);
 namespace Drupal\open_vocabularies\Plugin\Field\FieldType;
 
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
+use Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList;
 use Drupal\open_vocabularies\TypedData\VocabularyDataReferenceDefinition;
 
 /**
  * Defines the 'open_vocabulary_reference' field type.
- *
- * @FieldType(
- *   id = "open_vocabulary_reference",
- *   label = @Translation("Vocabulary reference"),
- *   category = @Translation("Open vocabulary"),
- *   default_widget = "open_vocabulary_reference_widget",
- *   default_formatter = "open_vocabulary_reference_label",
- *   list_class = "\Drupal\open_vocabularies\Plugin\Field\VocabularyReferenceFieldItemList",
- *   cardinality = \Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
- * )
  */
+#[FieldType(
+  id: "open_vocabulary_reference",
+  label: new TranslatableMarkup("Vocabulary reference"),
+  category: "open_vocabulary",
+  default_widget: "open_vocabulary_reference_widget",
+  default_formatter: "open_vocabulary_reference_label",
+  list_class: VocabularyReferenceFieldItemList::class,
+  cardinality: FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+)]
 class VocabularyReferenceItem extends FieldItemBase {
 
   /**
