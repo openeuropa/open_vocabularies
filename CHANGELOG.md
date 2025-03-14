@@ -1,10 +1,18 @@
 # Change Log
 
+## [1.2.0](https://github.com/openeuropa/open_vocabularies/tree/1.2.0) (2025-03-14)
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.1.0...1.2.0)
+
+**Merged pull requests:**
+
+- EWPP-4646: Support D11. [\#59](https://github.com/openeuropa/open_vocabularies/pull/59) ([msnassar](https://github.com/msnassar))
+
 ## [1.1.0](https://github.com/openeuropa/open_vocabularies/tree/1.1.0) (2025-01-28)
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.0.0...1.1.0)
 
 **Merged pull requests:**
 
+- Release-1.1.0: Update changelog. [\#58](https://github.com/openeuropa/open_vocabularies/pull/58) ([nagyad](https://github.com/nagyad))
 - EWPP-4991: Ensure PHP8.3 compatibility. [\#57](https://github.com/openeuropa/open_vocabularies/pull/57) ([nagyad](https://github.com/nagyad))
 
 ## [1.0.0](https://github.com/openeuropa/open_vocabularies/tree/1.0.0) (2024-10-28)
