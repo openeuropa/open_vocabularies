@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Drupal\open_vocabularies\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'open_vocabulary_reference_widget' field widget.
- *
- * @FieldWidget(
- *   id = "open_vocabulary_reference_widget",
- *   label = @Translation("Open vocabulary reference widget"),
- *   description = @Translation("This widget does not render any form element. It can be used as placeholder to position the single reference fields on the entity form display."),
- *   field_types = {"open_vocabulary_reference"},
- *   multiple_values = TRUE
- * )
  */
+#[FieldWidget(
+  id: 'open_vocabulary_reference_widget',
+  label: new TranslatableMarkup('Open vocabulary reference widget'),
+  description: new TranslatableMarkup('This widget does not render any form element. It can be used as placeholder to position the single reference fields on the entity form display.'),
+  field_types: ['open_vocabulary_reference'],
+  multiple_values: TRUE,
+)]
+
 class VocabularyReferenceWidget extends WidgetBase {
 
   /**

@@ -8,21 +8,22 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'open_vocabulary_reference_label' formatter.
- *
- * @FieldFormatter(
- *   id = "open_vocabulary_reference_label",
- *   label = @Translation("Label"),
- *   description = @Translation("Display the label of the referenced entities."),
- *   field_types = {
- *     "open_vocabulary_reference"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'open_vocabulary_reference_label',
+  label: new TranslatableMarkup('Label'),
+  description: new TranslatableMarkup('Display the label of the referenced entities.'),
+  field_types: [
+    'open_vocabulary_reference',
+  ],
+)]
 class VocabularyReferenceLabelFormatter extends VocabularyReferenceFormatterBase {
 
   /**
