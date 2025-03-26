@@ -1,10 +1,18 @@
 # Change Log
 
-## [1.2.0](https://github.com/openeuropa/open_vocabularies/tree/1.2.0) (2025-03-14)
+## [1.2.1](https://github.com/openeuropa/open_vocabularies/tree/1.2.1) (2025-03-26)
+[Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.2.0...1.2.1)
+
+**Merged pull requests:**
+
+- EWPP-4646: Fix core dependency. [\#62](https://github.com/openeuropa/open_vocabularies/pull/62) ([hernani](https://github.com/hernani))
+
+## [1.2.0](https://github.com/openeuropa/open_vocabularies/tree/1.2.0) (2025-03-17)
 [Full Changelog](https://github.com/openeuropa/open_vocabularies/compare/1.1.0...1.2.0)
 
 **Merged pull requests:**
 
+- Release-1.2.0: Update changelog. [\#61](https://github.com/openeuropa/open_vocabularies/pull/61) ([nagyad](https://github.com/nagyad))
 - EWPP-4646: Support D11. [\#59](https://github.com/openeuropa/open_vocabularies/pull/59) ([msnassar](https://github.com/msnassar))
 
 ## [1.1.0](https://github.com/openeuropa/open_vocabularies/tree/1.1.0) (2025-01-28)
