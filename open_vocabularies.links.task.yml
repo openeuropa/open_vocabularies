@@ -1,0 +1,9 @@
+entity.open_vocabulary.overview:
+  route_name: entity.open_vocabulary.collection
+  base_route: entity.open_vocabulary.collection
+  title: Vocabularies
+
+entity.open_vocabulary_association.collection:
+  route_name: entity.open_vocabulary_association.collection
+  base_route: entity.open_vocabulary.collection
+  title: 'Vocabulary associations'
