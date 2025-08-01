@@ -1,3 +1,7 @@
+# :warning: This repository is archived
+
+Development has moved to [drupal.org](https://www.drupal.org/project/open_vocabularies).
+
 # Open Vocabularies
 
 The Open Vocabularies module allows users to choose how a piece of content will be categorised without having to change the related content type field definition.
