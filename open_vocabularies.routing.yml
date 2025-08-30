@@ -2,7 +2,7 @@ entity.open_vocabulary.collection:
   path: '/admin/structure/open-vocabulary'
   defaults:
     _entity_list: 'open_vocabulary'
-    _title: 'Vocabulary configuration'
+    _title: 'Vocabularies'
   requirements:
     _permission: 'administer open vocabularies'
 
@@ -34,7 +34,7 @@ entity.open_vocabulary_association.collection:
   path: '/admin/structure/open-vocabulary-association'
   defaults:
     _entity_list: 'open_vocabulary_association'
-    _title: 'Vocabulary Association configuration'
+    _title: 'Vocabulary associations'
   requirements:
     _permission: 'administer open vocabulary associations'
 
